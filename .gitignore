@@ -1,0 +1,30 @@
+# Build trees
+/build/
+/cmake-build-*/
+/out/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+CTestTestfile.cmake
+Testing/
+cmake_install.cmake
+compile_commands.json
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Generated files
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Logs and traces
+*.log
+*.trace
