@@ -6,11 +6,13 @@
 #include "archlab/sim/event_queue.h"
 #include "archlab/sim/time.h"
 #include "archlab/stats/stats_manager.h"
+#include "archlab/sim/sim_object.h"
 
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
 #include <vector>
+
 
 #define CHECK(...)                                                                                \
     do {                                                                                          \
@@ -39,6 +41,45 @@ using archlab::sim::at_tick;
 using archlab::sim::next_delta;
 using archlab::sim::next_phase;
 using archlab::stats::StatsManager;
+using archlab::sim::LifecycleState;
+using archlab::sim::SimObject;
+
+class TestSimObject final : public SimObject {
+public:
+    explicit TestSimObject(std::string name)
+        : SimObject(std::move(name)) {
+
+    }
+
+    [[nodiscard]] int initialize_count() const {
+        return initialize_count_;
+    }
+
+    [[nodiscard]] int reset_count() const {
+        return reset_count_;
+    }
+
+    [[nodiscard]] int startup_count() const {
+        return startup_count_;
+    }
+
+protected:
+    void on_initialize() override {
+        ++initialize_count_;
+    }
+
+    void on_reset() override {
+        ++reset_count_;
+    }
+
+    void on_startup() override {
+        ++startup_count_;
+    }
+private:
+    int initialize_count_ = 0;
+    int reset_count_ = 0;
+    int startup_count_ = 0;
+};
 
 void test_time_ordering() {
     CHECK(at_tick(9) < at_tick(10));
@@ -226,6 +267,47 @@ void test_roi_magic_and_fake_cpu() {
     CHECK(snapshot.branches == 1);
 }
 
+void test_sim_object_identity() {
+    const SimObject object("timer0");
+
+    CHECK(object.name() == "timer0");
+    CHECK(object.state() == LifecycleState::Constructed);
+}
+
+void test_sim_object_lifecycle() {
+    TestSimObject object("timer0");
+
+    CHECK(object.state() == LifecycleState::Constructed);
+
+    object.initialize();
+    CHECK(object.state() == LifecycleState::Initialized);
+    CHECK(object.initialize_count() == 1);
+
+    object.reset();
+    CHECK(object.state() == LifecycleState::Ready);
+    CHECK(object.reset_count() == 1);
+
+    object.startup();
+    CHECK(object.state() == LifecycleState::Running);
+    CHECK(object.startup_count() == 1);
+}
+
+void test_sim_object_rejects_invalid_transition() {
+    TestSimObject object("timer0");
+
+    bool caught = false;
+
+    try {
+        object.startup();
+    } catch (const std::logic_error&) {
+        caught = true;
+    }
+
+    CHECK(caught);
+    CHECK(object.state() == LifecycleState::Constructed);
+    CHECK(object.startup_count() == 0);
+}
+
 } // namespace
 
 int main() {
@@ -239,7 +321,9 @@ int main() {
     test_simple_ram();
     test_memory_map();
     test_roi_magic_and_fake_cpu();
-
+    test_sim_object_identity();
+    test_sim_object_lifecycle();
+    test_sim_object_rejects_invalid_transition();
     std::cout << "All RVSoC-Sim v2 baseline tests passed.\n";
     return EXIT_SUCCESS;
 }

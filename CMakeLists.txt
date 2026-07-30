@@ -16,6 +16,8 @@ add_library(archlab-sim
     src/devices/magic_device.cpp
     src/stats/stats_manager.cpp
     src/cpu/fake_cpu.cpp
+        include/archlab/sim/sim_object.h
+        src/sim/sim_object.cpp
 )
 
 add_library(ArchLab::Sim ALIAS archlab-sim)
