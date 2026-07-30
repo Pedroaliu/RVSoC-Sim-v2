@@ -92,11 +92,48 @@ Magic command：
 
 它不是未来 CPU 架构的基类，不应在上面继续堆 ISA 或 pipeline 功能。
 
-## 8. 基线停止的位置
+## 8. SimObject 最小生命周期
+
+每个正式模拟组件可以继承 `SimObject`，获得稳定名字和最小生命周期状态机：
+
+```text
+Constructed
+    → initialize()
+Initialized
+    → reset()
+Ready
+    → startup()
+Running
+```
+
+已保证：
+
+- 名字不能为空；
+- 对象不可复制、不可移动，以保持地址稳定；
+- public 非虚函数负责检查状态并推进生命周期；
+- protected `on_initialize()`、`on_reset()`、`on_startup()` 由派生组件定制；
+- 钩子成功返回后才改变状态；
+- 非法转换抛出 `std::logic_error`，且不执行设备钩子。
+
+当前刻意不支持运行中的 reset、drain、shutdown 和 checkpoint；这些能力会在有明确实验需求时扩展。
+
+## 9. 测试基线
+
+测试使用项目内置的轻量注册框架和 CTest：
+
+- `tests/test_main.cpp` 只负责运行注册表；
+- 各模块测试放在独立 `.cpp` 文件中；
+- `ARCHLAB_TEST()` 在静态初始化期间自动注册测试；
+- CMake 使用 `GLOB_RECURSE ... CONFIGURE_DEPENDS` 自动发现新增测试源文件；
+- 无第三方测试库依赖；
+- `ctest --test-dir build --output-on-failure` 是统一入口。
+
+详细说明见 `docs/TESTING.md`。
+
+## 10. 基线停止的位置
 
 当前刻意没有实现：
 
-- SimObject；
 - Port/Link；
 - request/response；
 - ArchitecturalState；

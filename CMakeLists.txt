@@ -11,6 +11,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_library(archlab-sim
     src/sim/event_queue.cpp
+    src/sim/sim_object.cpp
     src/platform/memory_map.cpp
     src/devices/simple_ram.cpp
     src/devices/magic_device.cpp
@@ -36,8 +37,15 @@ add_executable(rvsoc-sim src/main.cpp)
 target_link_libraries(rvsoc-sim PRIVATE ArchLab::Sim)
 
 if(BUILD_TESTING)
-    add_executable(archlab-tests tests/test_main.cpp)
+    file(GLOB_RECURSE ARCHLAB_TEST_SOURCES CONFIGURE_DEPENDS
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
+    )
+
+    add_executable(archlab-tests ${ARCHLAB_TEST_SOURCES})
     target_link_libraries(archlab-tests PRIVATE ArchLab::Sim)
+    target_include_directories(archlab-tests PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests
+    )
 
     if(MSVC)
         target_compile_options(archlab-tests PRIVATE /W4 /permissive-)
