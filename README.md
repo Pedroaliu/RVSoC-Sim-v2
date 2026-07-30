@@ -62,8 +62,9 @@ v2 已经把 v1 中完成并验证过的基础能力整理成正式工程基线�
 - `MagicDevice`：统计复位、ROI 开始/结束、dump、停止模拟；
 - `StatsManager` 与 ROI 内指令/访存/分支计数；
 - `FakeCpu` 基础工作负载；
-- CMake、CTest、GCC/Clang CI、统一 `.clang-format`；
-- 完整基线单元测试。
+- `SimObject` 最小生命周期；
+- 轻量自动注册测试框架、CTest、GCC/Clang CI；
+- 统一 `.clang-format`。
 
 这部分代码的作用是提供一块已经验证过的地基。下一阶段开始，新的核心抽象与模型将由小实验逐个实现，而不是一次性生成完整成品。
 
@@ -72,15 +73,15 @@ v2 已经把 v1 中完成并验证过的基础能力整理成正式工程基线�
 ```text
 include/archlab/
 ├── base/           # 稳定基础类型
-├── sim/            # 时间、时钟域、事件内核
+├── sim/            # 时间、时钟域、事件内核、SimObject
 ├── platform/       # 地址空间与设备访问
 ├── devices/        # 基础设备
 ├── stats/          # 统计与 ROI
 └── cpu/            # 当前只有基线 FakeCpu
 
 src/                # 非模板实现
-tests/              # 平台契约测试
-docs/               # 架构、路线图、参考资料
+tests/              # 分模块平台契约测试
+docs/               # 架构、路线图、测试与参考资料
 .github/workflows/  # GCC/Clang CI
 ```
 
@@ -102,10 +103,9 @@ ctest --test-dir build --output-on-failure
 
 ## 下一步
 
-下一项正式实验不是写 CPU，也不是接 QEMU，而是建立第一个平台对象边界：
+M0.1 已完成。下一项正式实验是第一个组件连接契约：
 
 ```text
-M0.1  SimObject 最小生命周期
 M0.2  Typed Port / Link
 M0.3  MemRequest / MemResponse
 M0.4  Pending transaction 与 backpressure
@@ -117,6 +117,7 @@ M0.5  Architectural State 与 CommitRecord
 ## 文档
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)：目标架构和六项核心契约；
-- [`docs/BASELINE.md`](docs/BASELINE.md)：v2 已经替你完成的基础能力和行为定义；
+- [`docs/BASELINE.md`](docs/BASELINE.md)：v2 已经完成的基础能力和行为定义；
 - [`docs/ROADMAP.md`](docs/ROADMAP.md)：从当前基线到全系统 SoC 的阶段计划；
+- [`docs/TESTING.md`](docs/TESTING.md)：轻量测试框架、目录和运行方法；
 - [`docs/REFERENCES.md`](docs/REFERENCES.md)：课程、书籍、论文与主流模拟器参考。
