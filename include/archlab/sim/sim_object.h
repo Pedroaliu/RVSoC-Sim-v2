@@ -1,5 +1,5 @@
-#ifndef RVSOC_SIM_V2_SIM_OBJECT_H
-#define RVSOC_SIM_V2_SIM_OBJECT_H
+#ifndef ARCHLAB_SIM_SIM_OBJECT_H
+#define ARCHLAB_SIM_SIM_OBJECT_H
 
 #include <string>
 
@@ -34,7 +34,6 @@ protected:
     virtual void on_initialize();
     virtual void on_reset();
     virtual void on_startup();
-    virtual void on_shutdown();
 
 private:
     std::string name_;
@@ -43,4 +42,4 @@ private:
 
 } // namespace archlab::sim
 
-#endif // RVSOC_SIM_V2_SIM_OBJECT_H
+#endif // ARCHLAB_SIM_SIM_OBJECT_H
