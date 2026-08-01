@@ -117,7 +117,35 @@ Running
 
 当前刻意不支持运行中的 reset、drain、shutdown 和 checkpoint；这些能力会在有明确实验需求时扩展。
 
-## 9. 测试基线
+## 9. Typed Port / Link
+
+组件可以声明类型化端口，并通过显式 `Link<Message>` 建立一对一连接：
+
+```text
+OutputPort<Message>
+        ↓
+Link<Message>
+        ↓
+InputPort<Message>
+        ↓
+receiver-owned handler
+```
+
+已保证：
+
+- `InputPort` 和 `OutputPort` 都有稳定 owner 与本地名字；
+- 端口名字不能为空，输入端处理函数不能为空；
+- `Link` 是有稳定名字的 `SimObject`；
+- 一个 `Link` 只能连接一个输出端和一个输入端；
+- 一个端口只能属于一个 `Link`；
+- 连接失败不会把仍空闲的另一端留下为半连接状态；
+- 未连接的输出端禁止发送；
+- 消息类型由模板在编译期约束；
+- 只有 `Link` 可以调用输入端处理函数，发送方不能绕过连接直接调用接收端。
+
+M0.2 的 `Link` 只表达结构连接并立即投递消息。它刻意不包含 latency、queue、capacity、accepted/retry、backpressure 或异步 completion；这些属于下一阶段的事务契约。
+
+## 10. 测试基线
 
 测试使用项目内置的轻量注册框架和 CTest：
 
@@ -130,12 +158,13 @@ Running
 
 详细说明见 `docs/TESTING.md`。
 
-## 10. 基线停止的位置
+## 11. 基线停止的位置
 
 当前刻意没有实现：
 
-- Port/Link；
-- request/response；
+- `MemRequest` / `MemResponse`；
+- accepted / retry / backpressure；
+- pending transaction 与异步 completion；
 - ArchitecturalState；
 - CommitRecord；
 - checkpoint；

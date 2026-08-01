@@ -11,7 +11,7 @@
 namespace archlab::sim {
 
 template <typename Message>
-class OutputPort;
+class Link;
 
 template <typename Message>
 class InputPort {
@@ -45,29 +45,29 @@ public:
     }
 
     [[nodiscard]] bool is_connected() const {
-        return connected_;
+        return link_ != nullptr;
+    }
+
+private:
+    friend class Link<Message>;
+
+    void bind(Link<Message>& link) {
+        if (link_ != nullptr) {
+            throw std::logic_error(
+                owner_.name() + "." + name_ + ": input port is already connected");
+        }
+
+        link_ = &link;
     }
 
     void receive(const Message& message) const {
         handler_(message);
     }
 
-private:
-    friend class OutputPort<Message>;
-
-    void bind() {
-        if (connected_) {
-            throw std::logic_error(
-                owner_.name() + "." + name_ + ": input port is already connected");
-        }
-
-        connected_ = true;
-    }
-
     SimObject& owner_;
     std::string name_;
     Handler handler_;
-    bool connected_ = false;
+    Link<Message>* link_ = nullptr;
 };
 
 template <typename Message>
@@ -95,33 +95,102 @@ public:
     }
 
     [[nodiscard]] bool is_connected() const {
-        return peer_ != nullptr;
+        return link_ != nullptr;
     }
 
-    void connect(InputPort<Message>& input) {
-        if (peer_ != nullptr) {
+    void send(const Message& message) const;
+
+private:
+    friend class Link<Message>;
+
+    void bind(Link<Message>& link) {
+        if (link_ != nullptr) {
             throw std::logic_error(
                 owner_.name() + "." + name_ + ": output port is already connected");
         }
 
-        input.bind();
-        peer_ = &input;
+        link_ = &link;
     }
 
-    void send(const Message& message) const {
-        if (peer_ == nullptr) {
-            throw std::logic_error(
-                owner_.name() + "." + name_ + ": output port is not connected");
+    SimObject& owner_;
+    std::string name_;
+    Link<Message>* link_ = nullptr;
+};
+
+template <typename Message>
+class Link final : public SimObject {
+public:
+    explicit Link(std::string name)
+        : SimObject(std::move(name)) {
+    }
+
+    [[nodiscard]] bool is_connected() const {
+        return source_ != nullptr && sink_ != nullptr;
+    }
+
+    void connect(OutputPort<Message>& source, InputPort<Message>& sink) {
+        if (is_connected()) {
+            throw std::logic_error(name() + ": link is already connected");
         }
 
-        peer_->receive(message);
+        if (source.is_connected()) {
+            throw std::logic_error(
+                source.owner().name() + "." + source.name() +
+                ": output port is already connected");
+        }
+
+        if (sink.is_connected()) {
+            throw std::logic_error(
+                sink.owner().name() + "." + sink.name() +
+                ": input port is already connected");
+        }
+
+        source.bind(*this);
+        sink.bind(*this);
+        source_ = &source;
+        sink_ = &sink;
+    }
+
+    [[nodiscard]] const OutputPort<Message>& source() const {
+        if (!is_connected()) {
+            throw std::logic_error(name() + ": link is not connected");
+        }
+
+        return *source_;
+    }
+
+    [[nodiscard]] const InputPort<Message>& sink() const {
+        if (!is_connected()) {
+            throw std::logic_error(name() + ": link is not connected");
+        }
+
+        return *sink_;
     }
 
 private:
-    SimObject& owner_;
-    std::string name_;
-    InputPort<Message>* peer_ = nullptr;
+    friend class OutputPort<Message>;
+
+    void transmit(const Message& message) const {
+        if (!is_connected()) {
+            throw std::logic_error(name() + ": link is not connected");
+        }
+
+        sink_->receive(message);
+    }
+
+    OutputPort<Message>* source_ = nullptr;
+    InputPort<Message>* sink_ = nullptr;
 };
+
+template <typename Message>
+void OutputPort<Message>::send(const Message& message) const {
+    if (link_ == nullptr) {
+        throw std::logic_error(
+            owner_.name() + "." + name_ + ": output port is not connected");
+    }
+
+    link_->transmit(message);
+}
 
 } // namespace archlab::sim
 
