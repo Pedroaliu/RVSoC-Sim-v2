@@ -12,16 +12,16 @@
 - MemoryMap / MMIO / RAM；
 - Magic / ROI / Stats / FakeCpu；
 - 最小 `SimObject` 生命周期；
-- 分模块轻量测试框架与 CTest 自动发现。
+- 分模块轻量测试框架与 CTest 自动发现；
+- typed `InputPort` / `OutputPort` 与显式 `Link`。
 
 下一步由学习实验完成：
 
-1. typed `Port` 与 `Link`；
-2. `MemRequest` / `MemResponse`；
-3. accepted / retry / backpressure；
-4. pending transaction；
-5. `ArchitecturalState`；
-6. `CommitRecord`。
+1. `MemRequest` / `MemResponse`；
+2. accepted / retry / backpressure；
+3. pending transaction；
+4. `ArchitecturalState`；
+5. `CommitRecord`。
 
 完成标准：已有基线行为不变，组件不再通过直接函数调用修改彼此私有状态。
 
