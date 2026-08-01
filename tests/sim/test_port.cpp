@@ -8,6 +8,7 @@
 namespace {
 
 using archlab::sim::InputPort;
+using archlab::sim::Link;
 using archlab::sim::OutputPort;
 using archlab::sim::SimObject;
 
@@ -51,24 +52,6 @@ private:
     InputPort<int> input_;
 };
 
-ARCHLAB_TEST("InputPort delivers a typed message to its handler") {
-    SimObject receiver("receiver0");
-    int observed = 0;
-
-    InputPort<int> input(
-        receiver,
-        "request_in",
-        [&observed](const int& value) {
-            observed = value;
-        });
-
-    input.receive(42);
-
-    CHECK(observed == 42);
-    CHECK(input.name() == "request_in");
-    CHECK(input.owner().name() == "receiver0");
-}
-
 ARCHLAB_TEST("InputPort rejects an empty name") {
     SimObject receiver("receiver0");
 
@@ -96,35 +79,44 @@ ARCHLAB_TEST("OutputPort rejects an empty name") {
     CHECK_THROWS_AS(OutputPort<int>(sender, ""), std::invalid_argument);
 }
 
-ARCHLAB_TEST("OutputPort sends a typed message to a connected InputPort") {
+ARCHLAB_TEST("Link rejects an empty name") {
+    CHECK_THROWS_AS(Link<int>(""), std::invalid_argument);
+}
+
+ARCHLAB_TEST("Typed Link connects ports and delivers a message") {
     SimObject sender("sender0");
     SimObject receiver("receiver0");
     int observed = 0;
 
+    OutputPort<int> output(sender, "request_out");
     InputPort<int> input(
         receiver,
         "request_in",
         [&observed](const int& value) {
             observed = value;
         });
-    OutputPort<int> output(sender, "request_out");
+    Link<int> link("request_link");
 
-    CHECK(!input.is_connected());
     CHECK(!output.is_connected());
+    CHECK(!input.is_connected());
+    CHECK(!link.is_connected());
 
-    output.connect(input);
+    link.connect(output, input);
 
-    CHECK(input.is_connected());
     CHECK(output.is_connected());
+    CHECK(input.is_connected());
+    CHECK(link.is_connected());
+    CHECK(link.source().owner().name() == "sender0");
+    CHECK(link.source().name() == "request_out");
+    CHECK(link.sink().owner().name() == "receiver0");
+    CHECK(link.sink().name() == "request_in");
 
     output.send(42);
 
     CHECK(observed == 42);
-    CHECK(output.owner().name() == "sender0");
-    CHECK(output.name() == "request_out");
 }
 
-ARCHLAB_TEST("OutputPort rejects sending before connection") {
+ARCHLAB_TEST("OutputPort rejects sending before link connection") {
     SimObject sender("sender0");
     OutputPort<int> output(sender, "request_out");
 
@@ -132,11 +124,21 @@ ARCHLAB_TEST("OutputPort rejects sending before connection") {
     CHECK(!output.is_connected());
 }
 
-ARCHLAB_TEST("OutputPort rejects a second connection") {
-    SimObject sender("sender0");
+ARCHLAB_TEST("Unconnected Link rejects endpoint inspection") {
+    Link<int> link("request_link");
+
+    CHECK_THROWS_AS((void)link.source(), std::logic_error);
+    CHECK_THROWS_AS((void)link.sink(), std::logic_error);
+}
+
+ARCHLAB_TEST("Link rejects a second connection") {
+    SimObject sender0("sender0");
+    SimObject sender1("sender1");
     SimObject receiver0("receiver0");
     SimObject receiver1("receiver1");
 
+    OutputPort<int> output0(sender0, "request_out");
+    OutputPort<int> output1(sender1, "request_out");
     InputPort<int> input0(
         receiver0,
         "request_in",
@@ -147,49 +149,79 @@ ARCHLAB_TEST("OutputPort rejects a second connection") {
         "request_in",
         [](const int&) {
         });
-    OutputPort<int> output(sender, "request_out");
+    Link<int> link("request_link");
 
-    output.connect(input0);
+    link.connect(output0, input0);
 
-    CHECK_THROWS_AS(output.connect(input1), std::logic_error);
-
-    CHECK(output.is_connected());
-    CHECK(input0.is_connected());
+    CHECK_THROWS_AS(link.connect(output1, input1), std::logic_error);
+    CHECK(link.source().owner().name() == "sender0");
+    CHECK(link.sink().owner().name() == "receiver0");
+    CHECK(!output1.is_connected());
     CHECK(!input1.is_connected());
 }
 
-ARCHLAB_TEST("InputPort rejects multiple output connections") {
+ARCHLAB_TEST("OutputPort rejects multiple Link connections") {
+    SimObject sender("sender0");
+    SimObject receiver0("receiver0");
+    SimObject receiver1("receiver1");
+
+    OutputPort<int> output(sender, "request_out");
+    InputPort<int> input0(
+        receiver0,
+        "request_in",
+        [](const int&) {
+        });
+    InputPort<int> input1(
+        receiver1,
+        "request_in",
+        [](const int&) {
+        });
+    Link<int> link0("link0");
+    Link<int> link1("link1");
+
+    link0.connect(output, input0);
+
+    CHECK_THROWS_AS(link1.connect(output, input1), std::logic_error);
+    CHECK(link0.is_connected());
+    CHECK(!link1.is_connected());
+    CHECK(!input1.is_connected());
+}
+
+ARCHLAB_TEST("InputPort rejects multiple Link connections without partial binding") {
     SimObject sender0("sender0");
     SimObject sender1("sender1");
     SimObject receiver("receiver0");
 
+    OutputPort<int> output0(sender0, "request_out");
+    OutputPort<int> output1(sender1, "request_out");
     InputPort<int> input(
         receiver,
         "request_in",
         [](const int&) {
         });
-    OutputPort<int> output0(sender0, "request_out");
-    OutputPort<int> output1(sender1, "request_out");
+    Link<int> link0("link0");
+    Link<int> link1("link1");
 
-    output0.connect(input);
+    link0.connect(output0, input);
 
-    CHECK_THROWS_AS(output1.connect(input), std::logic_error);
-
-    CHECK(output0.is_connected());
+    CHECK_THROWS_AS(link1.connect(output1, input), std::logic_error);
+    CHECK(link0.is_connected());
+    CHECK(!link1.is_connected());
     CHECK(!output1.is_connected());
-    CHECK(input.is_connected());
 }
 
-ARCHLAB_TEST("Ports embedded in SimObject components communicate") {
+ARCHLAB_TEST("Ports embedded in SimObject components communicate through a Link") {
     TestSender sender("sender0");
     TestReceiver receiver("receiver0");
+    Link<int> link("request_link");
 
-    sender.output().connect(receiver.input());
+    link.connect(sender.output(), receiver.input());
     sender.output().send(42);
 
     CHECK(receiver.observed() == 42);
     CHECK(sender.output().owner().name() == "sender0");
     CHECK(receiver.input().owner().name() == "receiver0");
+    CHECK(link.name() == "request_link");
 }
 
 } // namespace
