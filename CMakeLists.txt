@@ -17,6 +17,8 @@ add_library(archlab-sim
     src/devices/magic_device.cpp
     src/stats/stats_manager.cpp
     src/cpu/fake_cpu.cpp
+        include/archlab/sim/transaction_id.h
+        include/archlab/platform/memory_transaction.h
 )
 
 add_library(ArchLab::Sim ALIAS archlab-sim)
@@ -41,7 +43,8 @@ if(BUILD_TESTING)
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
     )
 
-    add_executable(archlab-tests ${ARCHLAB_TEST_SOURCES})
+    add_executable(archlab-tests ${ARCHLAB_TEST_SOURCES}
+            tests/platform/test_memory_transaction.cpp)
     target_link_libraries(archlab-tests PRIVATE ArchLab::Sim)
     target_include_directories(archlab-tests PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/tests
