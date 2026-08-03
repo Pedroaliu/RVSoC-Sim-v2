@@ -2,116 +2,92 @@
 
 > Last updated: 2026-08-03
 
-审阅顺序服从 ArchLab 里程碑。每批完成后立即写入仓库，不依赖聊天记忆积累结果。
+每批完成后立即写入仓库。Priority、triage、canonicalization 和 L1/L2/L3 是不同状态。
 
-## 已完成 L1 批次
+## 已完成
 
-- Batch 1 — Simulation foundation：8 canonical works；
-- Batch 2 — CPU / ISA / OOO / SoC boundaries：4；
-- Batch 3 — Memory / Cache / Coherence / NoC：5；
-- Batch 4 — Performance / Datacenter / Methodology：4；
-- Batch 5 — Linux MM / Virtual Memory：4；
-- Batch 5B — RISC-V Linux boot contracts：6 source families。
+### L1 batches
 
-L1 合计：**31 canonical works/source families**。
+- Batch 1 Simulation foundation：8 canonical works；
+- Batch 2 CPU / ISA / OOO / SoC：4；
+- Batch 3 Memory / Cache / Coherence / NoC：5；
+- Batch 4 Performance / Datacenter / Methodology：4；
+- Batch 5 Linux MM / Virtual Memory：4；
+- Batch 5B RISC-V Linux boot contracts：6 source families。
 
-## Batch 6 — R-class manual triage
+L1 合计：**31**。
 
-Status: **complete**
+### Batch 6 — R-class triage
 
-```text
-43 raw R records
-→ 32 canonical groups
-→ 12 raw / 11 canonical groups promoted to A
-→ 31 raw / 21 canonical groups retained as B
-→ 0 remaining R
-```
+- 43 raw records 已全部处理；
+- 32 canonical groups；
+- R=0。
+
+### Batch 7 — A-level canonicalization
+
+- 156 A raw records；
+- 121 A canonical groups；
+- 7 groups 已被既有 L1 batches 覆盖；
+- **114 not-yet-L1 A groups** 形成当前真实队列。
 
 记录：
 
-- `reviews/batch-06-r-class-triage.md`；
-- `inventory/batch-06-r-class-triage.csv`；
-- `inventory/normalized-snapshot-v2.md`。
-
-R triage 是分类与 canonicalization，不表示全部条目达到 L1。
-
-## Batch 7 — Recalculate remaining A canonical groups
-
-Status: **next**
-
-原始粗筛共有 145 条 A，Batch 6 又提升了 12 条 raw records，但前六个 L1 批次已经吸收了其中一部分。因此必须从归一化快照重新计算，不能使用 `157 - 31` 之类的错误减法。
-
-步骤：
-
-1. 读取 `archlab_all_records_normalized_v2.csv`；
-2. 对 A raw records 做标题归一化、版本/翻译/伴随文件关系合并；
-3. 标记已被 Batch 1–5B 覆盖的 canonical works；
-4. 输出真正尚未达到 L1 的 A canonical groups；
-5. 为每组记录主版本、Drive ID、ArchLab 模块和目标审阅阶段。
-
-产物：
-
-- `inventory/a-canonical-groups-v1.csv`；
-- `reviews/batch-07-a-canonicalization.md`；
-- 更新后的 `STATUS.md`。
+- `reviews/batch-07-a-canonicalization.md`
+- `inventory/a-canonical-groups-v1.md`
+- `inventory/normalized-snapshot-v3.md`
 
 ## Batch 8 — Virtualization / QEMU / KVM / IOMMU
 
-Status: **queued after Batch 7**
+Status: **next**
 
-优先原因：它直接连接当前 functional platform、QEMU frontend、ArchLab-virt、H-extension、设备直通和 IOMMU 性能实验。
+六个未审 A canonical groups：
 
-预期来源族包括：
+1. RISC-V IOMMU specification/reference material；
+2. How to Develop Embedded Software Using the QEMU Machine Emulator；
+3. KVM 虚拟化技术：实战与原理解析；
+4. Hardware Support for Efficient Virtualization；
+5. AMD IOMMU；
+6. QEMU/KVM 源码解析与应用。
 
-- 系统虚拟化原理与实现；
-- Hardware and Software Support for Virtualization；
-- KVM 实战与原理；
-- QEMU machine/device modeling；
-- AMD IOMMU；
-- RISC-V IOMMU；
-- VT-x / ARM virtualization 支撑资料；
-- Simics/virtual-platform 已审结论的交叉引用。
+Supporting sources may include already reviewed Simics/VM/RISC-V platform work and B-level virtualization texts when they close a concrete gap.
 
 提取目标：
 
-- CPU virtualization、second-stage translation、interrupt virtualization；
-- QEMU machine/device/bus/memory-region 边界；
-- KVM userspace/kernel split；
-- IOMMU、DMA、ATS/PASID/PRI 与 fault/retry；
-- functional frontend 与 timing SoC backend 的适配边界；
-- ArchLab-rv64-virt-v0 与 ArchLab-virt 的复用关系。
+- trap-and-emulate、direct execution、paravirtualization 与 hardware assist；
+- guest architectural state、VM-exit reason 与 host control state；
+- GVA→GPA→HPA / two-stage translation；
+- shadow page tables versus nested/stage-2 page tables；
+- interrupt virtualization and device assignment boundaries；
+- QEMU object/machine/bus/device/memory-region composition；
+- KVM `/dev/kvm`, VM, vCPU, memory slot and run loop split；
+- IOMMU device identity, translation context, queue, invalidation, fault and completion semantics；
+- ATS/PASID/PRI and device-side translation-cache boundaries；
+- ArchLab transaction identity and retry/completion rules across QEMU/KVM/IOMMU adapters；
+- integration plan among `archlab-rv64-virt-v0`, QEMU frontend and ArchLab-virt。
 
-## 后续 A-level 里程碑组
+完成标准：
+
+- 六个 groups 均达到 L1 或被有证据地降级；
+- 写出 `topics/virtualization.md`；
+- 写出 virtualization/IOMMU boundary decision；
+- 更新 A canonical inventory coverage；
+- 明确哪些功能属于 RVSoC-Sim，哪些属于 ArchLab-virt，哪些通过 adapter 共享。
+
+## 后续批次
 
 1. PCIe / NVMe / SSD / CXL；
 2. RAS / ECC / Chipkill / fault injection / recovery；
-3. Parallel / NUMA / HPC / synchronization；
-4. Compiler / assembly / JIT / binary translation；
-5. GPU / NPU / DPU / SIMT / collectives；
-6. Power / thermal / energy；
-7. Security / confidential computing；
-8. Firmware / boot / UEFI；
-9. directly relevant C++ and software-engineering sources。
+3. Memory / Cache / DRAM / NVM（剩余细分资料）；
+4. Simulation & Modeling（剩余工具/论文）；
+5. Linux/OS（剩余专题）；
+6. Parallel / NUMA / HPC / synchronization；
+7. Compiler / JIT / binary translation；
+8. GPU / NPU / DPU / SIMT / collectives；
+9. Power / thermal / energy；
+10. Security / confidential computing；
+11. Firmware / UEFI；
+12. directly relevant software engineering。
 
-## B-class references
+## B-class policy
 
-429 raw B records are保留且可搜索。它们只在以下情形进入精读：
-
-- 当前里程碑需要；
-- S/A 来源的引用链指出它；
-- 设计问题暴露出知识缺口；
-- 需要构造有代表性的 workload 或验证 case。
-
-## Immediate work sequence
-
-```text
-A raw records
-    ↓ canonicalization / edition / duplicate grouping
-remaining A canonical groups
-    ↓
-Virtualization batch
-    ↓
-PCIe/Storage/CXL and RAS batches
-    ↓
-other milestone-driven reviews
-```
+429 raw B records 保留且可搜索。只在里程碑、引用链或设计缺口需要时进入内容审阅，不进行表演式“全部精读”。
