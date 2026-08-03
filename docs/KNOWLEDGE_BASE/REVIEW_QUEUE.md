@@ -14,74 +14,86 @@
 - Batch 4 Performance / Datacenter / Methodology：4；
 - Batch 5 Linux MM / VM：4；
 - Batch 5B RISC-V Linux boot contracts：6；
-- Batch 8 Virtualization / QEMU / KVM / IOMMU：6。
+- Batch 8 Virtualization / QEMU / KVM / IOMMU：6；
+- Batch 9 PCIe / NVMe / SSD / CXL：7。
 
-L1 total: **37 canonical source families**.
+L1 total: **44 canonical source families**.
 
 ### Classification batches
 
 - Batch 6: 43 R records resolved; R=0.
 - Batch 7: 156 A raw records → 121 canonical groups.
 
-Current A coverage after Batch 8:
+Current A coverage after Batch 9:
 
 ```text
-covered-L1:       13 groups / 28 raw records
-not-yet-L1:      108 groups / 128 raw records
+covered-L1:       20 groups / 36 raw records
+not-yet-L1:      101 groups / 120 raw records
 ```
 
-Current manifest: `inventory/a-canonical-groups-v2.md`.
+Current manifest: `inventory/a-canonical-groups-v3.md`.
 
 ## Batch 9 — PCIe / NVMe / SSD / CXL
 
-Status: **next**
+Status: **L1 complete**
 
-Primary remaining A groups in this domain: 6 canonical groups. The batch may pull in directly required B references or current official specifications when an A source alone does not define a software-visible contract.
-
-Expected source families include:
-
-- PCI Express architecture and transaction/credit model;
-- PCIe root complex, endpoint, BAR/configuration/MSI/MSI-X and DMA;
-- NVMe controller, queue pairs, commands and completions;
-- SSD architecture, FTL, flash geometry and latency/parallelism;
-- CXL.io / CXL.cache / CXL.mem and device types;
-- hotplug, SR-IOV, ATS/PASID/PRI interactions;
-- existing RISC-V/AMD IOMMU conclusions from Batch 8.
-
-Extraction goals:
-
-1. separate software-visible protocol state from link/controller timing state;
-2. define Requester ID, Tag, PASID and TransactionKey relationships;
-3. model posted/non-posted/completion ownership and credit/backpressure;
-4. define PCIe configuration and memory-map discovery;
-5. define NVMe submission/completion queue semantics and doorbells;
-6. separate NVMe controller functional behavior from NAND/FTL timing;
-7. define CXL protocol boundaries and coherency/memory semantics;
-8. build directed validation from register access through DMA and completion;
-9. map device assignment and IOMMU translation from Batch 8;
-10. produce staged PCIe/NVMe/CXL implementation milestones.
-
-Completion artifacts:
+Artifacts:
 
 - `reviews/batch-09-pcie-nvme-ssd-cxl.md`
 - `topics/pcie-storage-cxl.md`
-- a protocol/timing boundary decision
+- `decisions/pcie-nvme-ssd-cxl-boundaries.md`
+- `inventory/batch-09-pcie-storage-cxl.csv`
+- `inventory/normalized-snapshot-v5.md`
+- `inventory/a-canonical-groups-v3.md`
+
+Storage / PCIe / NVMe / SSD / USB now has zero not-yet-L1 A groups. One adjacent CXL performance group was also covered.
+
+## Batch 10 — RAS / ECC / Chipkill / fault injection / recovery
+
+Status: **next / 18 A canonical groups**
+
+Review order:
+
+1. error-control coding and ECC foundation sources；
+2. DRAM field-failure and multi-bit/symbol-error evidence；
+3. Chipkill / SDDC / device-width and rank/channel organization；
+4. scrub, patrol, retirement and recovery policy；
+5. fault injection and validation methodology；
+6. cache, interconnect and system-level reliability sources；
+7. mapping to ArchLab RAS counters, fault objects, recovery state machines and AVF/MTTF experiments。
+
+Extraction goals:
+
+- separate physical fault, observed syndrome, architectural error and software-visible report；
+- define transient/intermittent/permanent and correctable/uncorrectable/fatal taxonomies；
+- preserve device/rank/channel/beat/symbol location；
+- define ECC encode/check/correct timing and syndrome state；
+- model scrub/repair/retirement as explicit events；
+- distinguish fault injection from fault detection and recovery；
+- define checkpoint/replay interactions and deterministic test vectors；
+- map Chipkill x4/x8 organizations without hardcoding one vendor layout；
+- identify public versus restricted vendor sources。
+
+Completion artifacts:
+
+- `reviews/batch-10-ras-ecc-reliability.md`
+- `topics/ras.md`
+- `decisions/ras-fault-recovery-boundaries.md`
 - batch inventory and updated A coverage
 
 ## Later milestone batches
 
-1. RAS / ECC / Chipkill / fault injection / recovery；
-2. remaining Memory / Cache / DRAM / NVM；
-3. remaining Simulation & Modeling；
-4. remaining Linux / OS；
-5. Parallel / NUMA / HPC / synchronization；
-6. CPU/ISA implementation supplements；
-7. Compiler / JIT / binary translation；
-8. GPU / NPU / DPU / SIMT / collectives；
-9. Power / thermal / energy；
-10. Security / confidential computing；
-11. Firmware / UEFI；
-12. directly relevant software engineering。
+1. remaining Memory / Cache / DRAM / NVM / CXL（35）；
+2. remaining Simulation & Modeling（11）；
+3. remaining Linux / OS（11）；
+4. CPU/ISA supplements（8）；
+5. Parallel / NUMA / HPC / synchronization（8）；
+6. Performance / Datacenter supplements（3）；
+7. GPU / NPU / DPU / SIMT（2）；
+8. Security / confidential computing（2）；
+9. Firmware / UEFI（1）；
+10. NoC supplement（1）；
+11. RTL / FPGA（1）。
 
 ## B policy
 
