@@ -2,7 +2,7 @@
 
 > Last updated: 2026-08-03
 
-审阅顺序服从 ArchLab 当前路线，不以文件上传时间排序。每项先达到 L1，再决定是否进入 L2/L3。
+审阅顺序服从 ArchLab 当前路线，不以文件上传时间排序。每项先达到 L1，再决定是否进入 L2/L3。每批完成后立即写入仓库，不依赖聊天记忆积累多批结果。
 
 ## Batch 1 — Simulation foundation
 
@@ -17,26 +17,37 @@ Status: **L1 complete**
 - SimBricks
 - Ramulator 2.0
 
-## Batch 2 — CPU / ISA / OOO
+Record: `reviews/batch-01-simulation-foundation.md`
 
-Status: **queued**
+## Batch 2 — CPU / ISA / OOO and SoC boundaries
+
+Status: **L1 complete**
 
 1. Modern Processor Design: Fundamentals of Superscalar Processors
 2. Computer Architecture: A Quantitative Approach, 6th ed.
-3. Processor Microarchitecture
-4. ModernSoC_textbook
+3. Processor Microarchitecture: An Implementation Perspective
+4. Modern System-on-Chip Design on Arm (`ModernSoC_textbook.pdf`)
 
-Expected extraction:
+Completed extraction:
 
-- functional ISA state versus microarchitectural state;
-- frontend, prediction, rename, ROB, issue, execution, LSQ and recovery;
-- timing-model boundaries;
-- validation workloads and performance methodology;
-- what belongs in the first functional core and what must wait for timing/OOO.
+- architecture versus microarchitecture;
+- functional, timing in-order and detailed OOO model boundaries;
+- fetch, prediction, decode, rename, allocation, ROB, issue, execution, LSQ, commit and recovery responsibilities;
+- instruction/register/memory flow performance hierarchy;
+- precise exception and speculative-state recovery requirements;
+- CPU-to-memory transaction boundary;
+- SoC interconnect, abstraction-level and transactor implications;
+- validation split between ISA correctness, pipeline invariants, speculation correctness and timing calibration.
+
+Records:
+
+- `reviews/batch-02-cpu-isa-ooo.md`
+- `topics/cpu.md`
+- `inventory/batch-02-cpu-isa-ooo.csv`
 
 ## Batch 3 — Memory / Cache / Coherence / NoC
 
-Status: **queued**
+Status: **next / queued**
 
 1. Memory Systems: Cache, DRAM, Disk
 2. The Memory System
@@ -46,12 +57,14 @@ Status: **queued**
 
 Expected extraction:
 
-- request path and ownership;
-- cache/MSHR/writeback structures;
-- consistency versus coherence;
+- request path, ownership and completion;
+- cache lookup, fill, eviction, writeback and transient state;
+- primary/secondary misses and MSHR lifecycle;
+- memory consistency versus cache coherence;
 - protocol state machine versus NoC transport;
-- router, VC, buffer, credit, arbitration and deadlock;
-- DRAM-controller/backend boundary.
+- packet/flit, router, VC, buffer, credit, arbitration, QoS and deadlock;
+- DRAM-controller/backend boundary;
+- which parts belong in generic transactions and which remain subsystem-private.
 
 ## Batch 4 — Performance / Datacenter / Methodology
 
