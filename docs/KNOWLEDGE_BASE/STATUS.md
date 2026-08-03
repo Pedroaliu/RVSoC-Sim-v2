@@ -2,129 +2,143 @@
 
 > Last updated: 2026-08-03
 
-这是 ArchLab 资料工作的跨对话接力点。它严格区分 raw asset、canonical group、triage、L1 内容审阅和工程决定。
+这是 ArchLab 资料工作的跨对话接力点。raw asset、canonical group、triage、L1 review 和工程决定分别记录。
 
 ## 1. 全量资产
 
-已纳入 **623 条 PDF raw records**：Books 520，Paper 103。
+623 条 PDF raw records：Books 520，Paper 103。
 
-当前 raw-record 优先级：
+当前优先级：
 
 ```text
-S:  36
-A: 156
+S:  37
+A: 155
 B: 429
 C:   2
 R:   0
 Total: 623
 ```
 
-权威快照：
+当前 raw inventory：
 
-- `inventory/normalized-snapshot-v3.md`
-- Drive ID：`1Rcm-ivqexORPxfz07ThJe_-afTGES361`
-- SHA-256：`61388baed6db3474fefcaddb362d77647297ef404e864f0757b9159b08acd150`
+- `inventory/normalized-snapshot-v4.md`
+- Drive ID `1O1j7YWmhsrpYJt3hA1CY4nEJTuU18Pb9`
+- SHA-256 `86b3fbd78508e2832cd08ad82d22b4edea1d0d3ebfade2cad169386829cdf11b`
 
-`PMU_DATA.pdf` 经内容确认是电力系统励磁监测论文，PMU 指 phasor measurement unit，不是处理器性能监控单元，因此从 A 降为 C。
+## 2. L1 内容审阅
 
-## 2. 已完成 L1 内容审阅
-
-共 **31 个 canonical works/source families**：
+现有 **37 个 canonical works/source families** 达到 L1：
 
 - Batch 1 Simulation foundation：8；
 - Batch 2 CPU / ISA / OOO / SoC：4；
 - Batch 3 Memory / Coherence / NoC：5；
 - Batch 4 Performance / Datacenter / Methodology：4；
 - Batch 5 Linux MM / Virtual Memory：4；
-- Batch 5B RISC-V Linux boot contracts：6。
+- Batch 5B RISC-V Linux boot contracts：6；
+- Batch 8 Virtualization / QEMU / KVM / IOMMU：6。
 
-对应 review/topic/decision 文档均保存在本目录树。
+Batch 6、7 分别是 R triage 与 A canonicalization，不计入 L1 数量。
 
-## 3. Batch 6 — R-class triage
+## 3. 分类与 canonicalization
 
-Status: **complete**
+### Batch 6 — R complete
 
 ```text
-43 raw R records
-→ 32 canonical groups
-→ 12 raw / 11 groups promoted to A
-→ 31 raw / 21 groups retained as B
-→ R = 0
+43 raw R → 32 canonical groups → R=0
 ```
 
-记录：
-
-- `reviews/batch-06-r-class-triage.md`
-- `inventory/batch-06-r-class-triage.csv`
-
-## 4. Batch 7 — A-level canonicalization
-
-Status: **complete**
+### Batch 7 — A canonicalization complete
 
 ```text
 156 A raw records
 → 121 A canonical groups
-→ 7 groups / 22 raw records already covered by prior L1 batches
-→ 114 groups / 134 raw records remain not-yet-L1
+→ before Batch 8: 7 covered / 114 not-yet-L1
 ```
 
-权威 A-group 清单：
+### Batch 8 后的 A coverage
 
-- `inventory/a-canonical-groups-v1.md`
-- Drive ID：`1VwbkcSjDeJBZ070M-joYdt3XuEHBil6F`
-- SHA-256：`5b89e81fff4010bbff00708ea41a4206ff3878ec4b1c8d7c111160ca0158865b`
-
-记录：`reviews/batch-07-a-canonicalization.md`。
-
-### 4.1 尚未审阅的 A groups 分布
+- 当前 manifest：`inventory/a-canonical-groups-v2.md`
+- Drive ID：`1F9kmdkoR6RZNfuvZI6s0tadIgUGLYCjF`
+- SHA-256：`c04b2b41a0f281cba832a0d84e0c1cd4b0bc10097a9ea2dfd777234f230a1989`
 
 ```text
-Memory / Cache / DRAM / NVM / CXL                    36
-RAS / Reliability / ECC                              18
-Simulation & Modeling                                11
-OS / Linux / Kernel / Virtual Memory                 11
-CPU / ISA / Microarchitecture                         8
-Parallel / HPC / Concurrency / NUMA                   8
-Virtualization / QEMU / KVM / IOMMU                   6
-Storage / PCIe / NVMe / SSD / USB                     6
-Performance / Datacenter / Benchmarking               3
-AI / GPU / NPU / Heterogeneous                        2
-Security / Trusted Computing                          2
-Firmware / Boot / UEFI / BIOS                         1
-NoC / Interconnect / Networking                       1
-RTL / Digital Logic / FPGA                            1
+A canonical groups total:       121
+L1 covered:                      13 groups / 28 raw records
+Remaining not-yet-L1:           108 groups / 128 raw records
 ```
 
-### 4.2 Batch 7 的内容纠正
+## 4. Batch 8 — Virtualization / QEMU / KVM / IOMMU
 
-- `hardwareVirt.pdf` → *Hardware Support for Efficient Virtualization*；
-- `microarchitecture.pdf` → Agner Fog, *The Microarchitecture of Intel, AMD, and VIA CPUs*；
-- `2210.14324v1.pdf` → ChampSim 论文 *The Championship Simulator*；
-- `2014_paper_microcode*.pdf` → *Security Analysis of x86 Processor Microcode*；
-- 四个 `Computer_Organization_RiscV...` / `HandP_RISCV.pdf` raw files → 一个 *Computer Organization and Design: RISC-V Edition* canonical family；
-- `PMU_DATA.pdf` → 电力系统论文，降为 C。
+Status: **L1 complete**
 
-## 5. 当前已接受的项目方向
+Reviewed:
 
-- 一个稳定的 architectural-state 与 semantic-transaction contract；
-- functional/timing/cycle/external backends 通过 adapter 分离；
-- Completion 显式、可序列化；
-- architectural state 与 OOO/LSQ/ROB/MSHR 等私有状态分离；
-- ISA memory model、coherence、NoC、DRAM timing 分层；
-- 每次实验保存 resolved manifest、ROI、fidelity、seed、repetition 与 metric provenance；
-- guest page table 属于模拟内存，TLB/page walker 属于模型状态；
-- 第一台全系统机器是 `archlab-rv64-virt-v0`，Linux 入口为 `a0=hartid`、`a1=dtb_pa`、`satp=0`。
+1. RISC-V IOMMU Architecture Specification v1.0.1, ratified 2024-09-11；
+2. How to Develop Embedded Software Using the QEMU Machine Emulator；
+3. KVM虚拟化技术：实战与原理解析；
+4. Hardware Support for Efficient Virtualization；
+5. AMD IOMMU Specification Rev 3.10, February 2025；
+6. QEMU/KVM源码解析与应用。
 
-## 6. 下一步
+Records:
 
-Batch 8：**Virtualization / QEMU / KVM / IOMMU**，处理当前六个未审 A canonical groups，并结合已审 Simics、VM、RISC-V boot sources 提取：
+- `reviews/batch-08-virtualization-qemu-kvm-iommu.md`
+- `topics/virtualization.md`
+- `decisions/virtualization-qemu-kvm-iommu-boundaries.md`
+- `inventory/batch-08-virtualization.csv`
 
-- CPU virtualization 与 second-stage translation；
-- QEMU machine/device/bus/memory-region 边界；
-- KVM userspace/kernel split；
-- DMA/IOMMU/fault/retry/ATS/PASID/PRI；
-- `archlab-rv64-virt-v0`、QEMU frontend 与 ArchLab-virt 的复用边界。
+RISC-V IOMMU is promoted to S as the authoritative future implementation contract. The other five remain A because they are implementation, comparison or historically versioned sources.
 
-准确状态：
+## 5. Accepted virtualization direction
 
-> 623 条 raw assets 已全部归一化，R 已清零；31 个 source families 达到 L1；A 已归并成 121 groups，其中 7 已覆盖、114 尚未 L1。下一批从 6 个 Virtualization groups 开始。
+```text
+Architectural virtualization
+Execution backend
+Virtual-platform/device composition
+I/O virtualization / IOMMU
+Timing backend
+```
+
+These layers share semantic contracts but not implementation-private pointers or timing claims.
+
+### QEMU/KVM
+
+- QEMU: machine/address-space/device composition and userspace exit handling；
+- KVM: hardware-assisted VM/vCPU execution and kernel acceleration；
+- KVM/TCG are fast functional backends, not cycle models；
+- VM-exit host duration is not guest device latency；
+- QOM/MemoryRegion/KVM kernel pointers never become ArchLab public identities。
+
+### IOMMU
+
+- requests preserve `TransactionKey`, device identity, optional PASID/process identity, IOVA, access and attributes；
+- DDT/PDT/page tables and CQ/FQ/PQ are simulated guest-visible memory；
+- IOTLB/context/walker/ATC entries are private state；
+- first/second-stage translation, invalidation/fence, ATS, ATC invalidation and PRI have separate semantics and completions；
+- queue full, transport backpressure, translation fault and page-request deferral cannot collapse into one retry result。
+
+### Project ownership
+
+- RVSoC-Sim owns RISC-V machine, devices, IOMMU, SoC timing and QEMU/KVM adapters；
+- ArchLab-virt owns the self-built VMM/KVM learning and passthrough experiment path；
+- shared artifacts are state schemas, transaction/fault types, traces, test vectors and adapters—not a forced monolithic repository。
+
+## 6. Existing cross-topic decisions
+
+Still active:
+
+- stable architectural-state and semantic-transaction contracts；
+- functional/timing/cycle backends behind adapters；
+- explicit serialization-ready completion；
+- architectural state separated from ROB/LSQ/MSHR/IOTLB/walker private state；
+- ISA ordering, coherence, NoC and DRAM timing separated；
+- every result carries resolved configuration, ROI, fidelity, seed/repetition and metric provenance；
+- `archlab-rv64-virt-v0` remains the first full-system platform。
+
+## 7. Next batch
+
+Batch 9: **PCIe / NVMe / SSD / CXL**. It will consume the six currently queued storage/I/O A groups plus directly required specifications and tie them to the Batch 8 IOMMU/device-assignment boundary.
+
+Accurate state:
+
+> All 623 raw assets are normalized; R=0; 37 source families have L1 review; 13 of 121 A groups are covered and 108 remain. Virtualization/QEMU/KVM/IOMMU boundaries are now recorded and source-backed.
