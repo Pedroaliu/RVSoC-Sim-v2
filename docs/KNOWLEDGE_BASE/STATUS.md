@@ -2,219 +2,163 @@
 
 > Last updated: 2026-08-03
 
-这份文档是 ArchLab 资料审阅工作的接力点。它只记录已经完成到什么程度，不把“看过文件名”冒充“读过内容”。
+This file is the cross-conversation handoff point for ArchLab source review. It distinguishes asset inventory, filename classification, actual content review, and implementation extraction.
 
-## 1. 全量粗筛
+## 1. Full asset inventory
 
-L0 已完成，共纳入 **623 条 PDF 记录**：
+L0 filename-level screening is complete for **623 PDF records**:
 
-- Books：520 条；
-- Paper：103 条；
-- S：36 条；
-- A：145 条；
-- B：398 条；
-- R（必须人工确认）：43 条；
-- C（当前弱相关）：1 条。
+- Books: 520;
+- Paper folder: 103;
+- original coarse priorities: S 36, A 145, B 398, R 43, C 1;
+- 62 raw records were placed into about 31 preliminary duplicate groups.
 
-初步识别出 62 条重复记录，约 31 组。该结果主要基于标题归一化，并非全部经过文件哈希或全文比对。
+The duplicate result is still primarily title-based. Raw records are preserved until edition, size, metadata and content relationships are confirmed.
 
-## 2. L1 真实内容审阅
+## 2. L1 actual-content review
 
-目前共完成 **25 个 canonical works**。
+**31 canonical works/source families** have reached L1.
 
-### Batch 1 — Simulation foundation（8 项）
+### Batch 1 — Simulation foundation (8)
 
-1. Fundamentals of Full-Platform Simulation；
-2. Discrete-Event System Simulation；
-3. System Design with SystemC；
-4. Transaction Level Modeling with SystemC；
-5. gem5 + SystemC integration；
-6. Full-System Simulation with Simics；
-7. SimBricks；
-8. Ramulator 2.0。
+- Fundamentals of Full-Platform Simulation;
+- Discrete-Event System Simulation;
+- System Design with SystemC;
+- Transaction Level Modeling with SystemC;
+- gem5 + SystemC integration;
+- Full-System Simulation with Simics;
+- SimBricks;
+- Ramulator 2.0.
 
-记录：`reviews/batch-01-simulation-foundation.md`
+Record: `reviews/batch-01-simulation-foundation.md`
 
-### Batch 2 — CPU / ISA / OOO and SoC boundaries（4 项）
+### Batch 2 — CPU / ISA / OOO / SoC boundaries (4)
 
-9. Modern Processor Design: Fundamentals of Superscalar Processors；
-10. Computer Architecture: A Quantitative Approach, Sixth Edition；
-11. Processor Microarchitecture: An Implementation Perspective；
-12. Modern System-on-Chip Design on Arm。
+- Modern Processor Design;
+- Computer Architecture: A Quantitative Approach, Sixth Edition;
+- Processor Microarchitecture;
+- Modern System-on-Chip Design on Arm.
 
-记录：
+Records: `reviews/batch-02-cpu-isa-ooo.md`, `topics/cpu.md`.
 
-- `reviews/batch-02-cpu-isa-ooo.md`
-- `topics/cpu.md`
-- `inventory/batch-02-cpu-isa-ooo.csv`
+### Batch 3 — Memory / Coherence / NoC (5)
 
-### Batch 3 — Memory / Cache / Coherence / NoC（5 项）
+- Memory Systems: Cache, DRAM, Disk;
+- The Memory System;
+- A Primer on Memory Consistency and Cache Coherence, Second Edition;
+- On-Chip Networks, Second Edition;
+- GARNET.
 
-13. Memory Systems: Cache, DRAM, Disk；
-14. The Memory System: You Can’t Avoid It, You Can’t Ignore It, You Can’t Fake It；
-15. A Primer on Memory Consistency and Cache Coherence, Second Edition；
-16. On-Chip Networks, Second Edition；
-17. GARNET: A Detailed On-Chip Network Model inside a Full-System Simulator。
+Records: `reviews/batch-03-memory-coherence-noc.md`, `topics/memory.md`, `topics/noc.md`, `decisions/memory-coherence-noc-boundaries.md`.
 
-记录：
+### Batch 4 — Performance / Datacenter / Methodology (4)
 
-- `reviews/batch-03-memory-coherence-noc.md`
-- `topics/memory.md`
-- `topics/noc.md`
-- `decisions/memory-coherence-noc-boundaries.md`
-- `inventory/batch-03-memory-coherence-noc.csv`
+- The Art of Computer Systems Performance Analysis;
+- Performance Modeling and Design of Computer Systems;
+- The Datacenter as a Computer;
+- Computer Architecture Performance Evaluation Methods.
 
-### Batch 4 — Performance / Datacenter / Methodology（4 项）
+Records: `reviews/batch-04-performance-datacenter-methodology.md`, `topics/performance.md`, `decisions/performance-evaluation-methodology.md`.
 
-18. The Art of Computer Systems Performance Analysis；
-19. Performance Modeling and Design of Computer Systems；
-20. The Datacenter as a Computer；
-21. Computer Architecture Performance Evaluation Methods。
+### Batch 5 — Linux MM / Virtual Memory foundation (4)
 
-记录：
+- The Linux Memory Manager;
+- Operating Systems: Three Easy Pieces;
+- Architectural and Operating System Support for Virtual Memory;
+- Local and Remote Memory in a Linux/NUMA System.
 
-- `reviews/batch-04-performance-datacenter-methodology.md`
-- `topics/performance.md`
-- `decisions/performance-evaluation-methodology.md`
-- `inventory/batch-04-performance-methodology.csv`
+Records: `reviews/batch-05-linux-mm-virtual-memory.md`, `topics/linux.md`, `decisions/linux-vm-full-system-boundaries.md`.
 
-### Batch 5 — Linux MM / Virtual Memory foundation（4 项）
+### Batch 5B — RISC-V Linux boot contracts (6)
 
-22. The Linux Memory Manager；
-23. Operating Systems: Three Easy Pieces；
-24. Architectural and Operating System Support for Virtual Memory；
-25. Local and Remote Memory: Memory in a Linux/NUMA System。
+- RISC-V Privileged Architecture `v20260120`;
+- RISC-V SBI v3.0;
+- Linux RISC-V Kernel Boot Requirements;
+- OpenSBI platform requirements and firmware model;
+- Devicetree Specification;
+- upstream QEMU RISC-V `virt` platform documentation/source.
 
-记录：
+Records:
 
-- `reviews/batch-05-linux-mm-virtual-memory.md`
-- `topics/linux.md`
-- `decisions/linux-vm-full-system-boundaries.md`
-- `inventory/batch-05-linux-mm-vm.csv`
+- `reviews/batch-05b-riscv-linux-boot-contracts.md`;
+- `topics/riscv-linux-platform.md`;
+- `decisions/riscv-linux-machine-v0.md`;
+- `inventory/batch-05b-riscv-linux-boot.csv`.
 
-Batch 5 canonicalization/source notes：
+## 3. Accepted cross-source conclusions
 
-- *The Linux Memory Manager* 当前资料是 2025-02-07 Early Access，后续需要对照最终版本和实际 guest kernel；
-- OSTEP 两份分别为 2018 Version 1.00 与 2014 Version 0.80，属于同一 canonical work 的不同版本；
-- Virtual Memory 两个标题变体文件大小不同，先作为 related/probable copies 保留，不能直接删重；
-- Linux NUMA 资料来自 2006 年，保留架构与方法价值，但不能把 Linux 2.6 细节当作现代内核事实。
+### Simulator framework
 
-## 3. 还剩多少
+- stable architectural-state and semantic transaction contracts;
+- fidelity and transport behind adapters;
+- explicit, serialization-ready completion;
+- deterministic ordering, trace, validation and checkpoint capability;
+- single-process protocol correctness before PDES/distributed execution.
 
-不能用 `623 - 25` 计算剩余，因为 623 是原始文件记录，25 是合并版本与重复后的 canonical works，两者不是同一种计数单位。
+### CPU / OOO
 
-当前可准确说明：
+- architectural state is distinct from microarchitectural state;
+- functional, timing in-order and detailed OOO models have explicit boundaries;
+- execution completion, memory completion and commit are different events;
+- ROB/LSQ/MSHR indices are private state, not public transaction identity.
 
-- **43 条 R 类原始记录**必须逐个打开首页、目录或摘要才能定级；
-- 粗筛得到的 **145 条 A 类原始记录**按 ArchLab 里程碑审阅，其中部分已经被吸收到当前 canonical batches，尚未形成可靠的“未审 A 类”计数；
-- **398 条 B 类原始记录**已保留并按需读取；
-- **1 条 C 类**当前不进入项目资料主线；
-- 在进入 R 类前，还需要完成一个小而关键的 **Batch 5B：RISC-V Linux boot contracts**，因为现有 Batch 5 资料没有权威定义 Sv39、trap/interrupt、OpenSBI、DTB 和具体平台设备接口。
+### Memory / Coherence / NoC
 
-因此，当前准确进度是：
+- ISA memory model, core ordering, coherence, network transport and DRAM timing are separate layers;
+- protocol messages are not packets/flits;
+- transport backpressure is not protocol RetryLater;
+- fixed-latency, queued and detailed memory backends have separate fidelity claims;
+- MSHR/directory/controller/router state cannot replace `TransactionKey`.
 
-> 623 条全量资产已粗筛；25 个核心 canonical works 已完成 L1；下一步先补齐 RISC-V Linux 启动权威来源，然后逐个处理 43 条 R 类，再按里程碑处理 A 类资料。
+### Performance methodology
 
-## 4. 尚未完成
+- every result has a resolved experiment manifest;
+- raw events, derived metrics and conclusions remain separate;
+- workload, ROI, repetitions, seeds, normalization, fidelity and exclusions are result metadata;
+- analytical laws are validation partners, not substitutes for detailed models;
+- Top-down views preserve causal attribution and provenance.
 
-- Batch 5B：RISC-V Linux boot contracts；
-- 43 条 R 类资料的人工确认；
-- A 类资料按 Virtualization、PCIe/Storage/CXL、RAS/ECC、Parallel/NUMA、Compiler/JIT、Heterogeneous、Power/Thermal、Security 和 Firmware 等里程碑逐批审阅；
-- 重复文件的版本、大小、元数据和内容级确认；
-- 623 条记录按领域拆分为正式 inventory；
-- 已确认结论向正式设计文档和 `BASELINE.md` 的逐项回写。
+### Linux / virtual memory
 
-## 5. 当前跨资料结论
+- VMA validity, physical allocation and PTE presence are distinct states;
+- guest page tables are simulated memory; TLB/walker structures are model state;
+- Linux performs allocation, CoW, reclaim, migration and OOM policy inside the guest;
+- Linux kernel structures are optional decoder targets, not public simulator APIs.
 
-### 5.1 模拟器框架
+### RISC-V Linux machine
 
-1. 保持稳定的架构状态和事务语义契约；
-2. functional、transaction、timing、cycle 和外部协同由不同适配器承载；
-3. Completion 应显式、可序列化，不把进程内 callback 固化为永久协议；
-4. 功能正确性与性能精度必须分别验证；
-5. 确定性、trace、验证和 checkpoint 应尽早进入框架；
-6. 单进程协议稳定前，不急着实现跨进程同步或 PDES。
-
-### 5.2 CPU / ISA / OOO
-
-1. 架构状态与微架构状态分离；
-2. functional core、timing in-order core 和 detailed OOO core 有明确边界；
-3. 指令可以乱序执行/完成，但架构状态在 commit 边界最终生效；
-4. 内存请求完成、指令执行完成和指令 commit 是不同事件；
-5. ROB、LSQ、MSHR 等内部索引不能成为公共 Transaction 身份；
-6. 性能归因按 instruction flow、register data flow 和 memory data flow 组织。
-
-### 5.3 Memory / Coherence / NoC
-
-1. ISA memory model 定义软件可见的合法行为；core pipeline 与 coherence protocol 共同执行该语义；
-2. coherence protocol、network interface、packet/flit transport 和 DRAM backend 必须分层；
-3. protocol message 不是 packet/flit，packetization 和 reassembly 属于 adapter/network interface；
-4. Transport blocked、protocol `RetryLater` 和 accepted-but-pending-completion 是不同状态；
-5. 固定延迟、简单排队和详细 DRAM 是不同精度模型，实验必须声明所用 backend；
-6. MSHR、directory entry、DRAM queue entry、VC 和 credit 是子系统私有状态，不能替代 `TransactionKey`；
-7. routing deadlock、flow-control deadlock 和 protocol deadlock 必须分别验证；
-8. 研究 NoC/DRAM timing feedback 时，详细模型必须参与同一虚拟时间因果循环，预生成 trace 的结论范围要单独声明。
-
-### 5.4 Performance / Datacenter / Methodology
-
-1. 每个实验必须记录 research question、scope、workload、resolved config、per-component fidelity、warmup/ROI、seed/repetitions、metrics、validation target 和 exclusions；
-2. raw counters/events 与 derived metrics 分层，归一化和聚合规则必须可追溯；
-3. 固定延迟、排队模型、trace、execution-driven、full-system 和 hardware measurement 各有明确适用范围；
-4. Little's Law 与 queueing bounds 用作 sanity check，而不是替代详细协议/设备模型；
-5. workload representativeness、metric selection、baseline、averaging、confidence 和图表表达都可能造成错误结论；
-6. Top-down 可视化必须保存从服务目标到 workload/VM/process/component/transaction/event 的因果和数据 provenance；
-7. datacenter 是系统边界之一，不表示单节点效率不重要；应由服务瓶颈、tail、availability、power 和 cost 决定研究层级。
-
-### 5.5 Linux / Virtual Memory / Full-system boundary
-
-1. ArchLab 模拟硬件/固件契约，Linux 在 guest 内执行 VMA、分配、CoW、page cache、reclaim、migration 和 OOM 策略；
-2. 有效 VMA、已分配物理页和已安装 PTE 是三个不同状态；
-3. page table 属于 guest memory，TLB/page-walker queue 属于模拟器微架构状态；
-4. 详细 page-table walk 应产生普通 memory-system transaction；functional walker 可以优化，但必须保持地址、权限和 fault 结果一致；
-5. `mm_struct`、VMA、`struct page`/folio 是可选 Linux-aware decoder 的观察对象，不是公共模拟器 API；
-6. first Linux milestone 只要求功能正确的 translation/trap/platform contract，不要求 Linux allocator/reclaim/NUMA timing；
-7. NUMA 后续必须分别保存 execution node、memory home node、device attachment node 和 route/distance；
-8. 当前资料没有覆盖完整 RISC-V Linux boot 权威契约，必须通过 Batch 5B 补齐，不能靠聊天记忆填空。
-
-## 6. 与当前 M0.3 / M0.4 的关系
-
-### M0.3
+The first machine is the source-backed QEMU-virt-compatible subset:
 
 ```text
-issue()
-  ├─ send 前登记 pending
-  ├─ send() 可能同步重入 on_response()
-  ├─ 不允许 iterator/pointer/reference 跨过 send()
-  └─ send 返回后按 TransactionKey 重新查找
+archlab-rv64-virt-v0
 ```
 
-Transaction 不应携带 MSHR、directory、DRAM queue、router VC、TLB entry、page-walker entry 或 guest-kernel pointer。
+Linux-v0 requires one RV64 hart, M/S/U, Sv39, reset ROM, OpenSBI/SEE, DRAM at `0x80000000`, timer/software interrupt support, PLIC, NS16550 UART and a generated DTB. Linux entry is `a0=hartid`, `a1=dtb_pa`, `satp=0`. SMP, virtio, PCIe, IOMMU and AIA are later stages.
 
-### M0.4
+## 4. Current remaining work
 
-必须区分：
+### Batch 6 — R-class triage
 
-```text
-Accepted
-    receiver 已获得协议所有权并欠 completion
+- **43 raw records** must be resolved from R into S/A/B/C;
+- opaque filenames require first-page/TOC/abstract inspection;
+- newly discovered S works are promoted immediately.
 
-RetryLater
-    receiver 未接受或保留请求
+### A-class milestone review
 
-Transport blocked/backpressured
-    packet/flit 暂时不能前进，但协议所有权不自动返还
-```
+The original coarse pool contained 145 A records. Some are already absorbed into canonical batches, so the remaining canonical count is not yet trustworthy. Groups still include Virtualization, PCIe/Storage/CXL, RAS/ECC, Parallel/NUMA, Compiler/JIT, Heterogeneous, Power/Thermal, Security, Firmware and implementation-focused software engineering.
 
-### Future Stats / Trace
+### B-class
 
-Stats、Trace、ROI、resolved config 和 run metadata 必须让每个结果能够复现并追溯其 fidelity、时间范围、工作负载和派生公式。
+398 raw records remain searchable and classified. They are read when a milestone or source dependency needs them; the project does not pretend that indiscriminate cover-to-cover reading is useful.
 
-Linux-aware labels 必须额外记录 guest kernel build/config 和 decoder version，并允许完全关闭而不影响 guest 执行。
+## 5. Immediate next action
 
-## 7. 下一步
+1. resolve all 43 R records;
+2. commit the R triage and any promoted source batches;
+3. generate the normalized all-record inventory snapshot;
+4. recalculate remaining A-class canonical groups;
+5. continue milestone-driven L1/L2/L3 review.
 
-下一批按 `REVIEW_QUEUE.md` 推进：
+Accurate current statement:
 
-1. Batch 5B — RISC-V Linux boot contracts；
-2. Batch 6 — 43 条 R 类人工确认；
-3. 后续 A 类按里程碑进入 Virtualization、PCIe/Storage/CXL、RAS/ECC、Parallel/NUMA、Compiler/JIT、Heterogeneous、Power/Thermal、Security 和 Firmware。
+> All 623 assets have been inventoried and coarsely screened; 31 canonical source families have actual L1 review; RISC-V Linux boot contracts are source-backed; 43 ambiguous raw records are the next blocking classification task.
