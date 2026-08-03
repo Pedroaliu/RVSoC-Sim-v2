@@ -20,7 +20,7 @@ L0 已完成，共纳入 **623 条 PDF 记录**：
 
 ## 2. L1 真实内容审阅
 
-目前共完成 **21 个 canonical works**。
+目前共完成 **25 个 canonical works**。
 
 ### Batch 1 — Simulation foundation（8 项）
 
@@ -78,33 +78,48 @@ L0 已完成，共纳入 **623 条 PDF 记录**：
 - `decisions/performance-evaluation-methodology.md`
 - `inventory/batch-04-performance-methodology.csv`
 
-Batch 4 canonicalization notes：
+### Batch 5 — Linux MM / Virtual Memory foundation（4 项）
 
-- Raj Jain 的两份同名、同大小文件暂记为 probable duplicate；
-- Harchol-Balter 的截断标题文件仍需内容/大小确认；
-- *The Datacenter as a Computer* 两份不是重复：一份是 2013 第二版，一份是 2018/2019 第三版；第三版作为主版本。
+22. The Linux Memory Manager；
+23. Operating Systems: Three Easy Pieces；
+24. Architectural and Operating System Support for Virtual Memory；
+25. Local and Remote Memory: Memory in a Linux/NUMA System。
+
+记录：
+
+- `reviews/batch-05-linux-mm-virtual-memory.md`
+- `topics/linux.md`
+- `decisions/linux-vm-full-system-boundaries.md`
+- `inventory/batch-05-linux-mm-vm.csv`
+
+Batch 5 canonicalization/source notes：
+
+- *The Linux Memory Manager* 当前资料是 2025-02-07 Early Access，后续需要对照最终版本和实际 guest kernel；
+- OSTEP 两份分别为 2018 Version 1.00 与 2014 Version 0.80，属于同一 canonical work 的不同版本；
+- Virtual Memory 两个标题变体文件大小不同，先作为 related/probable copies 保留，不能直接删重；
+- Linux NUMA 资料来自 2006 年，保留架构与方法价值，但不能把 Linux 2.6 细节当作现代内核事实。
 
 ## 3. 还剩多少
 
-不能用 `623 - 21` 计算剩余，因为 623 是原始文件记录，21 是合并版本与重复后的 canonical works，两者不是同一种计数单位。
+不能用 `623 - 25` 计算剩余，因为 623 是原始文件记录，25 是合并版本与重复后的 canonical works，两者不是同一种计数单位。
 
 当前可准确说明：
 
 - **43 条 R 类原始记录**必须逐个打开首页、目录或摘要才能定级；
-- **145 条 A 类原始记录**需要按 ArchLab 里程碑做 L1 审阅，canonicalization 后实际作品数会少于 145；
-- **398 条 B 类原始记录**已保留在知识库，但原则上按专题需要读取，不计划为了“读完”而全部精读；
+- 粗筛得到的 **145 条 A 类原始记录**按 ArchLab 里程碑审阅，其中部分已经被吸收到当前 canonical batches，尚未形成可靠的“未审 A 类”计数；
+- **398 条 B 类原始记录**已保留并按需读取；
 - **1 条 C 类**当前不进入项目资料主线；
-- 已明确排队的下一批是 Linux MM / full-system integration，之后先处理 43 条 R 类，防止遗漏被错误归类的重要资料。
+- 在进入 R 类前，还需要完成一个小而关键的 **Batch 5B：RISC-V Linux boot contracts**，因为现有 Batch 5 资料没有权威定义 Sv39、trap/interrupt、OpenSBI、DTB 和具体平台设备接口。
 
 因此，当前准确进度是：
 
-> 623 条全量资产已粗筛；21 个核心 canonical works 已完成 L1；仍有 43 条 R 类待逐个确认，以及 145 条 A 类按模块逐批审阅。精确剩余 canonical-work 数量要等 R 类与重复版本继续合并后才能给出。
+> 623 条全量资产已粗筛；25 个核心 canonical works 已完成 L1；下一步先补齐 RISC-V Linux 启动权威来源，然后逐个处理 43 条 R 类，再按里程碑处理 A 类资料。
 
 ## 4. 尚未完成
 
-- Batch 5：Linux MM / full-system integration；
+- Batch 5B：RISC-V Linux boot contracts；
 - 43 条 R 类资料的人工确认；
-- A 类资料按 Virtualization、PCIe/Storage/CXL、RAS/ECC、Parallel/NUMA、Compiler/JIT、Heterogeneous、Power/Thermal 和 Security 等里程碑逐批审阅；
+- A 类资料按 Virtualization、PCIe/Storage/CXL、RAS/ECC、Parallel/NUMA、Compiler/JIT、Heterogeneous、Power/Thermal、Security 和 Firmware 等里程碑逐批审阅；
 - 重复文件的版本、大小、元数据和内容级确认；
 - 623 条记录按领域拆分为正式 inventory；
 - 已确认结论向正式设计文档和 `BASELINE.md` 的逐项回写。
@@ -150,6 +165,17 @@ Batch 4 canonicalization notes：
 6. Top-down 可视化必须保存从服务目标到 workload/VM/process/component/transaction/event 的因果和数据 provenance；
 7. datacenter 是系统边界之一，不表示单节点效率不重要；应由服务瓶颈、tail、availability、power 和 cost 决定研究层级。
 
+### 5.5 Linux / Virtual Memory / Full-system boundary
+
+1. ArchLab 模拟硬件/固件契约，Linux 在 guest 内执行 VMA、分配、CoW、page cache、reclaim、migration 和 OOM 策略；
+2. 有效 VMA、已分配物理页和已安装 PTE 是三个不同状态；
+3. page table 属于 guest memory，TLB/page-walker queue 属于模拟器微架构状态；
+4. 详细 page-table walk 应产生普通 memory-system transaction；functional walker 可以优化，但必须保持地址、权限和 fault 结果一致；
+5. `mm_struct`、VMA、`struct page`/folio 是可选 Linux-aware decoder 的观察对象，不是公共模拟器 API；
+6. first Linux milestone 只要求功能正确的 translation/trap/platform contract，不要求 Linux allocator/reclaim/NUMA timing；
+7. NUMA 后续必须分别保存 execution node、memory home node、device attachment node 和 route/distance；
+8. 当前资料没有覆盖完整 RISC-V Linux boot 权威契约，必须通过 Batch 5B 补齐，不能靠聊天记忆填空。
+
 ## 6. 与当前 M0.3 / M0.4 的关系
 
 ### M0.3
@@ -162,7 +188,7 @@ issue()
   └─ send 返回后按 TransactionKey 重新查找
 ```
 
-Transaction 不应携带 MSHR、directory、DRAM queue 或 router VC 的内部指针。
+Transaction 不应携带 MSHR、directory、DRAM queue、router VC、TLB entry、page-walker entry 或 guest-kernel pointer。
 
 ### M0.4
 
@@ -181,12 +207,14 @@ Transport blocked/backpressured
 
 ### Future Stats / Trace
 
-Batch 4 增加的约束：Stats、Trace、ROI、resolved config 和 run metadata 必须让每个结果能够复现并追溯其 fidelity、时间范围、工作负载和派生公式。
+Stats、Trace、ROI、resolved config 和 run metadata 必须让每个结果能够复现并追溯其 fidelity、时间范围、工作负载和派生公式。
+
+Linux-aware labels 必须额外记录 guest kernel build/config 和 decoder version，并允许完全关闭而不影响 guest 执行。
 
 ## 7. 下一步
 
 下一批按 `REVIEW_QUEUE.md` 推进：
 
-1. Batch 5 — Linux MM / full-system integration；
+1. Batch 5B — RISC-V Linux boot contracts；
 2. Batch 6 — 43 条 R 类人工确认；
-3. 后续 A 类按里程碑进入 Virtualization、PCIe/Storage/CXL、RAS/ECC、Parallel/NUMA、Compiler/JIT、Heterogeneous、Power/Thermal 和 Security。
+3. 后续 A 类按里程碑进入 Virtualization、PCIe/Storage/CXL、RAS/ECC、Parallel/NUMA、Compiler/JIT、Heterogeneous、Power/Thermal、Security 和 Firmware。
