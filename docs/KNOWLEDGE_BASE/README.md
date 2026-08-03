@@ -16,26 +16,29 @@ GitHub stores raw-to-canonical relationships, priority, actual reviews, topic ma
 
 ## State levels
 
-- L0: filename screening;
-- Triage: identify opaque files;
-- Canonicalized: group copies/editions/translations/companions;
-- L1: inspect actual TOC/abstract/introduction/key sections;
-- L2: selected deep reading or complete short paper;
-- L3: implementation/API/state-machine/validation extraction.
+- L0: filename screening；
+- Triage: identify opaque files；
+- Canonicalized: group copies/editions/translations/companions；
+- L1: inspect actual TOC/abstract/introduction/key sections；
+- L1-restricted: content was inspected but public extraction is intentionally limited by source markings；
+- L2: selected deep reading or complete short paper；
+- L3: implementation/API/state-machine/validation extraction。
 
 Triage or canonicalization is not automatically L1.
 
 ## Current authoritative inventories
 
-### Raw inventory v4
+### Raw inventory v5
 
-- Manifest: `inventory/normalized-snapshot-v4.md`
-- Drive ID: `1O1j7YWmhsrpYJt3hA1CY4nEJTuU18Pb9`
+- Manifest: `inventory/normalized-snapshot-v5.md`
+- Drive ID: `1xfHcOVBdAb9yMdr9xnk4vZWDASoIpB2Y`
+- SHA-256: `a67cd9899e5d7285f49072d7204d8943a0cf17dd091eb0c92808be175f442b97`
 
-### A canonical groups v2
+### A canonical groups v3
 
-- Manifest: `inventory/a-canonical-groups-v2.md`
-- Drive ID: `1F9kmdkoR6RZNfuvZI6s0tadIgUGLYCjF`
+- Manifest: `inventory/a-canonical-groups-v3.md`
+- Drive ID: `15_kV0hTWIVaLCKUWq7ip5gN_D9-GEipd`
+- SHA-256: `46f3ddf1cd881ec85c0f4be14c980eae9aeb675b162f69d535effbf2960fb321`
 
 Older snapshots remain for audit.
 
@@ -43,18 +46,18 @@ Older snapshots remain for audit.
 
 ```text
 inventory/
-    normalized-snapshot-v4.md
-    a-canonical-groups-v2.md
-    batch-08-virtualization.csv
+    normalized-snapshot-v5.md
+    a-canonical-groups-v3.md
+    batch-09-pcie-storage-cxl.csv
 
 reviews/
-    batch-08-virtualization-qemu-kvm-iommu.md
+    batch-09-pcie-nvme-ssd-cxl.md
 
 topics/
-    virtualization.md
+    pcie-storage-cxl.md
 
 decisions/
-    virtualization-qemu-kvm-iommu-boundaries.md
+    pcie-nvme-ssd-cxl-boundaries.md
 ```
 
 Previous batch documents remain in the same directories.
@@ -67,17 +70,21 @@ Read in this order:
 2. `docs/CURRENT_STATE.md`
 3. `docs/KNOWLEDGE_BASE/STATUS.md`
 4. `docs/KNOWLEDGE_BASE/REVIEW_QUEUE.md`
-5. `docs/KNOWLEDGE_BASE/inventory/normalized-snapshot-v4.md`
-6. `docs/KNOWLEDGE_BASE/inventory/a-canonical-groups-v2.md`
+5. `docs/KNOWLEDGE_BASE/inventory/normalized-snapshot-v5.md`
+6. `docs/KNOWLEDGE_BASE/inventory/a-canonical-groups-v3.md`
 7. topic-specific review/topic/decision files
 
 Code and tests outrank the knowledge base. The knowledge base records source support, design rationale and review state.
 
+## Restricted-source rule
+
+A source visibly marked confidential, NDA-required, export-restricted or otherwise non-public may be registered for provenance. The public repository must not contain detailed extracts, proprietary procedures or long quotations from that source. Public normative sources are required before implementation.
+
 ## Maintenance rules
 
-- preserve every raw record;
-- never equate probable duplicate with byte identity;
-- distinguish source statements, engineering inference and ArchLab decisions;
-- record source gaps instead of filling them from chat memory;
-- update status, queue, inventory and review after every batch;
-- move stable contracts into formal design documents or `BASELINE.md` when implemented.
+- preserve every raw record；
+- never equate probable duplicate with byte identity；
+- distinguish source statements, engineering inference and ArchLab decisions；
+- record source gaps instead of filling them from chat memory；
+- update status, queue, inventory and review after every batch；
+- move stable contracts into formal design documents or `BASELINE.md` when implemented。
