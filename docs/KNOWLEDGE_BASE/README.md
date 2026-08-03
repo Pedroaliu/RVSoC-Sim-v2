@@ -27,7 +27,7 @@ GitHub 保存：
 - 分类、优先级和 ArchLab 模块映射；
 - 每批真实阅读后的审阅记录；
 - 从资料中形成的主题地图和工程决定；
-- 当前进度和下一批队列。
+- 当前进度、来源缺口和下一批队列。
 
 GitHub 是跨对话恢复时的权威入口，聊天和临时生成文件不是最终事实来源。
 
@@ -49,37 +49,27 @@ docs/KNOWLEDGE_BASE/
 ├── SOURCE_MANIFEST.md
 ├── REVIEW_QUEUE.md
 ├── inventory/
-│   └── batch-02-cpu-isa-ooo.csv
+│   ├── README.md
+│   ├── batch-02-cpu-isa-ooo.csv
+│   ├── batch-03-memory-coherence-noc.csv
+│   ├── batch-04-performance-methodology.csv
+│   └── batch-05-linux-mm-vm.csv
 ├── reviews/
 │   ├── batch-01-simulation-foundation.md
-│   └── batch-02-cpu-isa-ooo.md
-└── topics/
-    └── cpu.md
-```
-
-后续按批次继续增加：
-
-```text
-inventory/
-    books.csv
-    papers.csv
-    duplicates.csv
-
-topics/
-    simulation.md
-    memory.md
-    noc.md
-    linux.md
-    virtualization.md
-    pcie-storage.md
-    ras.md
-    performance.md
-    heterogeneous.md
-
-decisions/
-    transaction-completion.md
-    fidelity-and-adapters.md
-    validation-methodology.md
+│   ├── batch-02-cpu-isa-ooo.md
+│   ├── batch-03-memory-coherence-noc.md
+│   ├── batch-04-performance-datacenter-methodology.md
+│   └── batch-05-linux-mm-virtual-memory.md
+├── topics/
+│   ├── cpu.md
+│   ├── memory.md
+│   ├── noc.md
+│   ├── performance.md
+│   └── linux.md
+└── decisions/
+    ├── memory-coherence-noc-boundaries.md
+    ├── performance-evaluation-methodology.md
+    └── linux-vm-full-system-boundaries.md
 ```
 
 完整 623 条 inventory 会分领域逐步提交；在拆分完成前，`SOURCE_MANIFEST.md` 保存原始 Drive 恢复入口和已确认 canonical groups。
@@ -101,5 +91,6 @@ decisions/
 - 宁可把不确定资料放入人工复核，也不因文件名模糊而误删；
 - 中文版、英文版、扫描版和重复下载合并成一个 canonical work，但保留原始记录；
 - 资料结论必须区分“来源明确支持”“工程推断”“ArchLab 自己的决定”；
-- 每完成一批审阅，立即更新 `STATUS.md`、`REVIEW_QUEUE.md`、review 和相关 inventory/topic 文档；
+- 发现权威来源缺口时必须显式排队，不能靠聊天记忆悄悄补全；
+- 每完成一批审阅，立即更新 `STATUS.md`、`REVIEW_QUEUE.md`、review 和相关 inventory/topic/decision 文档；
 - 形成稳定工程契约后，将结论写入 `docs/DECISIONS.md`、专题设计文档或 `BASELINE.md`，不能只留在资料笔记里。
