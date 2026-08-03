@@ -20,7 +20,7 @@ L0 已完成，共纳入 **623 条 PDF 记录**：
 
 ## 2. L1 真实内容审阅
 
-目前共完成 **17 个 canonical works**。
+目前共完成 **21 个 canonical works**。
 
 ### Batch 1 — Simulation foundation（8 项）
 
@@ -48,8 +48,6 @@ L0 已完成，共纳入 **623 条 PDF 记录**：
 - `topics/cpu.md`
 - `inventory/batch-02-cpu-isa-ooo.csv`
 
-Batch 2 修正了一项粗分类：`ModernSoC_textbook.pdf` 实际是 David J. Greaves 的 *Modern System-on-Chip Design on Arm*，主分类应是 SoC Integration / Interconnect / ESL，而不是单纯 CPU / OOO。
-
 ### Batch 3 — Memory / Cache / Coherence / NoC（5 项）
 
 13. Memory Systems: Cache, DRAM, Disk；
@@ -66,33 +64,54 @@ Batch 2 修正了一项粗分类：`ModernSoC_textbook.pdf` 实际是 David J. G
 - `decisions/memory-coherence-noc-boundaries.md`
 - `inventory/batch-03-memory-coherence-noc.csv`
 
-Batch 3 canonicalization notes：
+### Batch 4 — Performance / Datacenter / Methodology（4 项）
 
-- `K0413` 与 `K0474` 是同名同大小的第二版 Primer，暂记为 probable duplicate；
-- `K0416` 是 2011 第一版，属于 related edition，不能当成重复文件删除；
-- *The Memory System* 是聚焦模型精度的独立 synthesis lecture，不是 *Memory Systems: Cache, DRAM, Disk* 的重复副本。
+18. The Art of Computer Systems Performance Analysis；
+19. Performance Modeling and Design of Computer Systems；
+20. The Datacenter as a Computer；
+21. Computer Architecture Performance Evaluation Methods。
 
-## 3. 尚未完成
+记录：
 
-全库尚未全部读完。仍需完成：
+- `reviews/batch-04-performance-datacenter-methodology.md`
+- `topics/performance.md`
+- `decisions/performance-evaluation-methodology.md`
+- `inventory/batch-04-performance-methodology.csv`
 
-- 其余 S 类 canonical works 的 L1 审阅；
-- 43 条 R 类资料的目录/摘要人工确认；
-- A 类资料按里程碑逐批审阅；
+Batch 4 canonicalization notes：
+
+- Raj Jain 的两份同名、同大小文件暂记为 probable duplicate；
+- Harchol-Balter 的截断标题文件仍需内容/大小确认；
+- *The Datacenter as a Computer* 两份不是重复：一份是 2013 第二版，一份是 2018/2019 第三版；第三版作为主版本。
+
+## 3. 还剩多少
+
+不能用 `623 - 21` 计算剩余，因为 623 是原始文件记录，21 是合并版本与重复后的 canonical works，两者不是同一种计数单位。
+
+当前可准确说明：
+
+- **43 条 R 类原始记录**必须逐个打开首页、目录或摘要才能定级；
+- **145 条 A 类原始记录**需要按 ArchLab 里程碑做 L1 审阅，canonicalization 后实际作品数会少于 145；
+- **398 条 B 类原始记录**已保留在知识库，但原则上按专题需要读取，不计划为了“读完”而全部精读；
+- **1 条 C 类**当前不进入项目资料主线；
+- 已明确排队的下一批是 Linux MM / full-system integration，之后先处理 43 条 R 类，防止遗漏被错误归类的重要资料。
+
+因此，当前准确进度是：
+
+> 623 条全量资产已粗筛；21 个核心 canonical works 已完成 L1；仍有 43 条 R 类待逐个确认，以及 145 条 A 类按模块逐批审阅。精确剩余 canonical-work 数量要等 R 类与重复版本继续合并后才能给出。
+
+## 4. 尚未完成
+
+- Batch 5：Linux MM / full-system integration；
+- 43 条 R 类资料的人工确认；
+- A 类资料按 Virtualization、PCIe/Storage/CXL、RAS/ECC、Parallel/NUMA、Compiler/JIT、Heterogeneous、Power/Thermal 和 Security 等里程碑逐批审阅；
 - 重复文件的版本、大小、元数据和内容级确认；
 - 623 条记录按领域拆分为正式 inventory；
-- Linux、Virtualization、PCIe、RAS、Performance、Heterogeneous 等主题映射；
 - 已确认结论向正式设计文档和 `BASELINE.md` 的逐项回写。
 
-由于多个原始记录会合并成一个 canonical work，目前不公布“剩余 S 类书籍数量”的精确值，等 canonicalization 继续完成后再统计。
+## 5. 当前跨资料结论
 
-准确状态是：
-
-> 全量资产盘点和文件名粗筛完成；17 个核心 canonical works 完成 L1 真实内容审阅；其余资料按批次推进，每批完成后立即写回 GitHub。
-
-## 4. 当前跨资料结论
-
-### 4.1 模拟器框架
+### 5.1 模拟器框架
 
 1. 保持稳定的架构状态和事务语义契约；
 2. functional、transaction、timing、cycle 和外部协同由不同适配器承载；
@@ -101,16 +120,16 @@ Batch 3 canonicalization notes：
 5. 确定性、trace、验证和 checkpoint 应尽早进入框架；
 6. 单进程协议稳定前，不急着实现跨进程同步或 PDES。
 
-### 4.2 CPU / ISA / OOO
+### 5.2 CPU / ISA / OOO
 
-1. 建筑状态与微架构状态分离；
+1. 架构状态与微架构状态分离；
 2. functional core、timing in-order core 和 detailed OOO core 有明确边界；
 3. 指令可以乱序执行/完成，但架构状态在 commit 边界最终生效；
 4. 内存请求完成、指令执行完成和指令 commit 是不同事件；
 5. ROB、LSQ、MSHR 等内部索引不能成为公共 Transaction 身份；
 6. 性能归因按 instruction flow、register data flow 和 memory data flow 组织。
 
-### 4.3 Memory / Coherence / NoC
+### 5.3 Memory / Coherence / NoC
 
 1. ISA memory model 定义软件可见的合法行为；core pipeline 与 coherence protocol 共同执行该语义；
 2. coherence protocol、network interface、packet/flit transport 和 DRAM backend 必须分层；
@@ -121,7 +140,17 @@ Batch 3 canonicalization notes：
 7. routing deadlock、flow-control deadlock 和 protocol deadlock 必须分别验证；
 8. 研究 NoC/DRAM timing feedback 时，详细模型必须参与同一虚拟时间因果循环，预生成 trace 的结论范围要单独声明。
 
-## 5. 与当前 M0.3 / M0.4 的关系
+### 5.4 Performance / Datacenter / Methodology
+
+1. 每个实验必须记录 research question、scope、workload、resolved config、per-component fidelity、warmup/ROI、seed/repetitions、metrics、validation target 和 exclusions；
+2. raw counters/events 与 derived metrics 分层，归一化和聚合规则必须可追溯；
+3. 固定延迟、排队模型、trace、execution-driven、full-system 和 hardware measurement 各有明确适用范围；
+4. Little's Law 与 queueing bounds 用作 sanity check，而不是替代详细协议/设备模型；
+5. workload representativeness、metric selection、baseline、averaging、confidence 和图表表达都可能造成错误结论；
+6. Top-down 可视化必须保存从服务目标到 workload/VM/process/component/transaction/event 的因果和数据 provenance；
+7. datacenter 是系统边界之一，不表示单节点效率不重要；应由服务瓶颈、tail、availability、power 和 cost 决定研究层级。
+
+## 6. 与当前 M0.3 / M0.4 的关系
 
 ### M0.3
 
@@ -133,7 +162,7 @@ issue()
   └─ send 返回后按 TransactionKey 重新查找
 ```
 
-Batch 3 进一步确认：Transaction 不应携带 MSHR、directory、DRAM queue 或 router VC 的内部指针。
+Transaction 不应携带 MSHR、directory、DRAM queue 或 router VC 的内部指针。
 
 ### M0.4
 
@@ -150,11 +179,14 @@ Transport blocked/backpressured
     packet/flit 暂时不能前进，但协议所有权不自动返还
 ```
 
-## 6. 下一步
+### Future Stats / Trace
+
+Batch 4 增加的约束：Stats、Trace、ROI、resolved config 和 run metadata 必须让每个结果能够复现并追溯其 fidelity、时间范围、工作负载和派生公式。
+
+## 7. 下一步
 
 下一批按 `REVIEW_QUEUE.md` 推进：
 
-1. Batch 4 — Performance / Datacenter / Methodology；
-2. Batch 5 — Linux MM / full-system integration；
-3. Batch 6 — R 类人工确认；
-4. 后续按里程碑进入 Virtualization、PCIe/Storage/CXL、RAS/ECC 和 Heterogeneous。
+1. Batch 5 — Linux MM / full-system integration；
+2. Batch 6 — 43 条 R 类人工确认；
+3. 后续 A 类按里程碑进入 Virtualization、PCIe/Storage/CXL、RAS/ECC、Parallel/NUMA、Compiler/JIT、Heterogeneous、Power/Thermal 和 Security。

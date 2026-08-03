@@ -44,20 +44,6 @@ Status: **L1 complete**
 4. On-Chip Networks, 2nd ed.
 5. GARNET paper
 
-Completed extraction:
-
-- functional, fixed-latency, queued and detailed-DRAM fidelity boundaries;
-- cache functional state versus timing resources;
-- generic transaction identity versus MSHR/directory/controller/router private state;
-- consistency model versus coherence protocol;
-- protocol message versus packet/flit;
-- network-interface responsibility for packetization and class mapping;
-- transport backpressure versus protocol `RetryLater`;
-- routing, flow-control and protocol deadlock separation;
-- message-level and detailed flit-level NoC backends;
-- full-system timing feedback and the limits of pre-generated traces;
-- layered validation from memory bytes through full-system timing.
-
 Records:
 
 - `reviews/batch-03-memory-coherence-noc.md`
@@ -68,45 +54,61 @@ Records:
 
 ## Batch 4 — Performance / Datacenter / Methodology
 
-Status: **next / queued**
+Status: **L1 complete**
 
 1. The Art of Computer Systems Performance Analysis
 2. Performance Modeling and Design of Computer Systems
-3. The Datacenter as a Computer
+3. The Datacenter as a Computer, Second and Third Editions
 4. Computer Architecture Performance Evaluation Methods
 
-Expected extraction:
+Completed extraction:
 
-- performance-question formulation;
-- metric selection and common mistakes;
-- factors, levels and experiment design;
+- experiment-question and system-boundary formulation;
 - workload selection and representativeness;
-- warmup, ROI, repetitions and random seeds;
-- confidence intervals and comparison methodology;
-- queueing, Little’s Law and utilization/response-time relations;
-- bottleneck and sensitivity analysis;
+- metric, baseline, averaging and ratio pitfalls;
+- factors, levels, repetitions, seeds and confidence;
+- functional, trace-driven, execution-driven and full-system evaluation scopes;
+- analytical, empirical and hybrid models;
+- Little's Law and queueing bounds as simulator sanity checks;
 - simulator verification, validation and calibration;
-- single-node versus warehouse-scale system boundaries;
-- how the Top-down visualization should preserve causal attribution.
+- run metadata and result provenance;
+- warehouse-scale workload, monitoring, tail, power, availability and cost scope;
+- Top-down causal path from service objective to cycle-level events.
+
+Records:
+
+- `reviews/batch-04-performance-datacenter-methodology.md`
+- `topics/performance.md`
+- `decisions/performance-evaluation-methodology.md`
+- `inventory/batch-04-performance-methodology.csv`
 
 ## Batch 5 — Linux MM / full-system integration
 
-Status: **queued**
+Status: **next / queued**
 
-1. The Linux Memory Manager
-2. OSTEP / Operating System Concepts family as supporting references
-3. Virtual-memory and Linux NUMA papers from the inventory
+Primary sources:
+
+1. The Linux Memory Manager — Lorenzo Stoakes
+2. Operating Systems: Three Easy Pieces / OSTEP family
+3. Architectural and Operating System Support for Virtual Memory
+4. Linux NUMA and local/remote-memory papers in the inventory
+5. Supporting Linux kernel architecture and virtual-memory references as needed
 
 Expected extraction:
 
-- page-table and fault behavior needed by the functional platform;
-- Sv39/MMU boundary;
-- software-visible timer, interrupt and device contracts;
-- Linux boot validation and observability.
+- software-visible physical/virtual-memory behavior required by a functional platform;
+- page-table walk, TLB, permission and fault boundaries;
+- Sv39/MMU responsibilities versus Linux memory-management policy;
+- demand paging, CoW, mmap, page faults and anonymous/file-backed memory;
+- NUMA placement, local/remote access and migration;
+- timer, interrupt, UART, DTB and boot contracts needed before Linux;
+- which Linux behaviors require detailed timing and which require only functional correctness;
+- full-system validation from OpenSBI to BusyBox shell;
+- observation points for VM/process/page/transaction Top-down analysis.
 
 ## Batch 6 — R-class manual triage
 
-Status: **43 records queued**
+Status: **43 raw records queued**
 
 For each R item:
 
@@ -114,17 +116,36 @@ For each R item:
 2. inspect table of contents or abstract;
 3. assign canonical work and domain;
 4. decide S/A/B/C;
-5. record whether the filename was opaque, truncated or misleading.
+5. record whether the filename was opaque, truncated or misleading;
+6. immediately promote any newly discovered S source into its own review batch.
 
-## Later milestone-driven groups
+The R batch comes before broad A-class review so an important source is not lost merely because its filename was poor.
 
-- Virtualization / QEMU / KVM / IOMMU
-- PCIe / NVMe / SSD / CXL
-- RAS / ECC / Chipkill / fault injection / recovery
-- Parallel / NUMA / HPC
-- Compiler / assembly / JIT / binary translation
-- GPU / NPU / DPU / SIMT / collective communication
-- Power / thermal / energy
-- Security / confidential computing
+## A-class milestone review
 
-These groups remain in the inventory now, but detailed reading starts when their ArchLab milestone approaches, unless a source affects a current foundational contract.
+Status: **145 raw records queued; canonical count unknown until deduplication**
+
+Planned groups:
+
+1. Virtualization / QEMU / KVM / IOMMU
+2. PCIe / NVMe / SSD / CXL
+3. RAS / ECC / Chipkill / fault injection / recovery
+4. Parallel / NUMA / HPC / synchronization
+5. Compiler / assembly / JIT / binary translation
+6. GPU / NPU / DPU / SIMT / collective communication
+7. Power / thermal / energy
+8. Security / confidential computing
+9. Firmware / boot / UEFI / OpenSBI
+10. Programming and software-engineering references that directly affect simulator implementation
+
+## B-class references
+
+Status: **398 raw records retained**
+
+B-class files remain searchable and classified. They are read on demand when:
+
+- an ArchLab milestone needs the subject;
+- an A/S source cites a useful implementation or validation method;
+- a new design question exposes a gap in the primary source set.
+
+They are not scheduled for indiscriminate cover-to-cover reading.
