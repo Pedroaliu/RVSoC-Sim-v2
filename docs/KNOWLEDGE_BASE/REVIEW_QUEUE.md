@@ -28,17 +28,6 @@ Status: **L1 complete**
 3. Processor Microarchitecture: An Implementation Perspective
 4. Modern System-on-Chip Design on Arm (`ModernSoC_textbook.pdf`)
 
-Completed extraction:
-
-- architecture versus microarchitecture;
-- functional, timing in-order and detailed OOO model boundaries;
-- fetch, prediction, decode, rename, allocation, ROB, issue, execution, LSQ, commit and recovery responsibilities;
-- instruction/register/memory flow performance hierarchy;
-- precise exception and speculative-state recovery requirements;
-- CPU-to-memory transaction boundary;
-- SoC interconnect, abstraction-level and transactor implications;
-- validation split between ISA correctness, pipeline invariants, speculation correctness and timing calibration.
-
 Records:
 
 - `reviews/batch-02-cpu-isa-ooo.md`
@@ -47,40 +36,58 @@ Records:
 
 ## Batch 3 — Memory / Cache / Coherence / NoC
 
-Status: **next / queued**
+Status: **L1 complete**
 
 1. Memory Systems: Cache, DRAM, Disk
-2. The Memory System
+2. The Memory System: You Can’t Avoid It, You Can’t Ignore It, You Can’t Fake It
 3. A Primer on Memory Consistency and Cache Coherence, 2nd ed.
 4. On-Chip Networks, 2nd ed.
 5. GARNET paper
 
-Expected extraction:
+Completed extraction:
 
-- request path, ownership and completion;
-- cache lookup, fill, eviction, writeback and transient state;
-- primary/secondary misses and MSHR lifecycle;
-- memory consistency versus cache coherence;
-- protocol state machine versus NoC transport;
-- packet/flit, router, VC, buffer, credit, arbitration, QoS and deadlock;
-- DRAM-controller/backend boundary;
-- which parts belong in generic transactions and which remain subsystem-private.
+- functional, fixed-latency, queued and detailed-DRAM fidelity boundaries;
+- cache functional state versus timing resources;
+- generic transaction identity versus MSHR/directory/controller/router private state;
+- consistency model versus coherence protocol;
+- protocol message versus packet/flit;
+- network-interface responsibility for packetization and class mapping;
+- transport backpressure versus protocol `RetryLater`;
+- routing, flow-control and protocol deadlock separation;
+- message-level and detailed flit-level NoC backends;
+- full-system timing feedback and the limits of pre-generated traces;
+- layered validation from memory bytes through full-system timing.
+
+Records:
+
+- `reviews/batch-03-memory-coherence-noc.md`
+- `topics/memory.md`
+- `topics/noc.md`
+- `decisions/memory-coherence-noc-boundaries.md`
+- `inventory/batch-03-memory-coherence-noc.csv`
 
 ## Batch 4 — Performance / Datacenter / Methodology
 
-Status: **queued**
+Status: **next / queued**
 
 1. The Art of Computer Systems Performance Analysis
 2. Performance Modeling and Design of Computer Systems
 3. The Datacenter as a Computer
+4. Computer Architecture Performance Evaluation Methods
 
 Expected extraction:
 
-- experiment design, calibration and confidence;
-- queueing and Little's Law;
-- bottleneck attribution;
+- performance-question formulation;
+- metric selection and common mistakes;
+- factors, levels and experiment design;
 - workload selection and representativeness;
-- system-level and warehouse-scale performance scope.
+- warmup, ROI, repetitions and random seeds;
+- confidence intervals and comparison methodology;
+- queueing, Little’s Law and utilization/response-time relations;
+- bottleneck and sensitivity analysis;
+- simulator verification, validation and calibration;
+- single-node versus warehouse-scale system boundaries;
+- how the Top-down visualization should preserve causal attribution.
 
 ## Batch 5 — Linux MM / full-system integration
 
