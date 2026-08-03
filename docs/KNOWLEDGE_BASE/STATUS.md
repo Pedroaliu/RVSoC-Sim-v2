@@ -11,8 +11,8 @@
 当前优先级：
 
 ```text
-S:  37
-A: 155
+S:  41
+A: 151
 B: 429
 C:   2
 R:   0
@@ -21,15 +21,15 @@ Total: 623
 
 当前 raw inventory：
 
-- `inventory/normalized-snapshot-v5.md`
-- Drive ID `1xfHcOVBdAb9yMdr9xnk4vZWDASoIpB2Y`
-- SHA-256 `a67cd9899e5d7285f49072d7204d8943a0cf17dd091eb0c92808be175f442b97`
+- `inventory/normalized-snapshot-v6.md`
+- Drive ID `1Pn3mmhEGkWySAmqOMpzha7D-hpDiUYJr`
+- SHA-256 `d2a6767a8361985bde98176bdf4cf2feee91ea5f35957d873ed5ca59167d532c`
 
-v5 没有改变优先级数量；它把 Batch 9 的内容审阅状态、canonical identity 和 restricted-source disposition 写回 8 条 raw records。
+v6 把 Batch 10 的内容审阅状态与 canonical identity 写回 20 条 raw records，并将 4 条内容确认后的核心资料从 A 提升为 S。全部 623 条记录仍然保留。
 
 ## 2. L1 内容审阅
 
-现有 **44 个 canonical works/source families** 达到 L1：
+现有 **62 个 canonical works/source families** 达到 L1：
 
 - Batch 1 Simulation foundation：8；
 - Batch 2 CPU / ISA / OOO / SoC：4；
@@ -38,41 +38,29 @@ v5 没有改变优先级数量；它把 Batch 9 的内容审阅状态、canonica
 - Batch 5 Linux MM / Virtual Memory：4；
 - Batch 5B RISC-V Linux boot contracts：6；
 - Batch 8 Virtualization / QEMU / KVM / IOMMU：6；
-- Batch 9 PCIe / NVMe / SSD / CXL：7。
+- Batch 9 PCIe / NVMe / SSD / CXL：7；
+- Batch 10 RAS / ECC / fault injection / recovery：18。
 
 Batch 6、7 分别是 R triage 与 A canonicalization，不计入 L1 数量。
 
 ## 3. Canonical coverage
 
-### Batch 6 — R complete
-
-```text
-43 raw R → 32 canonical groups → R=0
-```
-
-### Batch 7 — A canonicalization complete
-
-```text
-156 A raw records → 121 A canonical groups
-```
-
-### Batch 9 后的 A coverage
-
-- manifest：`inventory/a-canonical-groups-v3.md`
-- Drive ID：`15_kV0hTWIVaLCKUWq7ip5gN_D9-GEipd`
-- SHA-256：`46f3ddf1cd881ec85c0f4be14c980eae9aeb675b162f69d535effbf2960fb321`
-
 ```text
 A canonical groups total:       121
-L1 covered:                      20 groups / 36 raw records
-Remaining not-yet-L1:           101 groups / 120 raw records
+L1 covered:                      38 groups / 56 raw records
+Remaining not-yet-L1:           83 groups / 100 raw records
 ```
+
+当前 manifest：
+
+- `inventory/a-canonical-groups-v4.md`
+- Drive ID：`1vHK1N2Dw6jBUqA5NxvYl9xC5VopPMsDe`
+- SHA-256：`cc971d4e1dd338e45bb658513e4af9bfcf219f914ca6f499c769c4ba955d750b`
 
 Remaining domains：
 
 ```text
 Memory / Cache / DRAM / NVM / CXL                    35
-RAS / Reliability / ECC                              18
 Simulation & Modeling                                11
 OS / Linux / Kernel / Virtual Memory                 11
 CPU / ISA / Microarchitecture                         8
@@ -85,84 +73,95 @@ NoC / Interconnect / Networking                       1
 RTL / Digital Logic / FPGA                            1
 ```
 
-The original Storage / PCIe / NVMe / SSD / USB A group is now fully covered at L1.
+Storage / PCIe / NVMe / SSD / USB 与 RAS / Reliability / ECC 两个 A-level domain 均已完成 L1。
 
-## 4. Batch 9 — PCIe / NVMe / SSD / CXL
+## 4. Batch 10 — RAS / ECC / Fault Injection / Recovery
 
 Status: **L1 complete**
 
-Reviewed:
+Batch 10 审阅 18 个 canonical groups，覆盖：
 
-1. *PCI Express Technology: Comprehensive Guide to Generations 1.x, 2.x, 3.0*；
-2. *PCI Express 体系结构导读*；
-3. *A Beginner's Guide to SSD Firmware*；
-4. *深入浅出SSD（第二版）*；
-5. restricted vendor NVMe hotplug source（L1-restricted）；
-6. *PCM-Based Durable Write Cache for Fast Disk I/O*；
-7. *Performance Characterization of CXL Memory and Its Use Cases*。
+- 体系结构级 fault → error → failure、masking、AVF、detection、recovery、diagnosis 与 self-repair；
+- Fault-Tolerant Systems 的可靠性、可用性、MTTF/Markov、冗余、编码、ABFT 与恢复框架；
+- DRAM 现场错误数据、CE/UE、hard/soft fault、scrub 和 retirement 方法；
+- SECDED、BCH、Reed–Solomon、symbol-oriented Chipkill-style 与 adjacent-bit ECC；
+- application/object/MPI/GPU fault injection、DVF、natural resilience、ABFT/ECC 协同与 campaign methodology；
+- FPGA SEU、TMR、scrubbing、bitstream injection 与 coverage/overhead 评估。
 
-Records:
+Records：
 
-- `reviews/batch-09-pcie-nvme-ssd-cxl.md`
-- `topics/pcie-storage-cxl.md`
-- `decisions/pcie-nvme-ssd-cxl-boundaries.md`
-- `inventory/batch-09-pcie-storage-cxl.csv`
+- `reviews/batch-10-ras-ecc-reliability.md`
+- `topics/ras.md`
+- `decisions/ras-fault-recovery-boundaries.md`
+- `inventory/batch-10-ras-ecc.csv`
 
-Batch CSV Drive ID: `1CgEL4GpOrTBdYH2S0ZTWKNqEBsorDyoT`; SHA-256 `76cd81417dc4b1b9ac6de54c58da37b59342bfee202e0b0f6ad56945971e5bf9`.
+Batch CSV Drive ID：`1Z_JgDQAjG0WGqrPxi58V65aSdHzG_f4R`；SHA-256 `bd33a11b5f3438e85b5cc6907584c114701619bd92478b6138ce183a06b0f289`。
 
-## 5. Accepted PCIe/storage/CXL direction
+## 5. Accepted RAS direction
 
-### PCIe layers
+### 5.1 Layered event model
 
 ```text
-function/configuration
-transaction request/message/completion
-credit transport + data-link Ack/Nak/replay
-physical link + LTSSM
+physical or injected fault
+    ↓ manifestation / masking
+component error state
+    ↓ detection / correction
+architectural RAS event
+    ↓ containment / notification
+firmware / OS recovery
+    ↓
+service / isolation / retirement / repair
 ```
 
-- link Ack/Nak is not transaction completion；
-- posted writes do not receive transaction completions；
-- non-posted requests consume tag identity and later receive completion(s)；
-- credit exhaustion is transport backpressure, not `RetryLater`；
-- MaxPayload/MaxReadReq/tag/credit/completion fragmentation are timing-model inputs；
-- `TransactionKey` remains public identity; Requester ID/Tag are PCIe-adapter identity; replay/credit/LTSSM objects remain private。
+- fault、error、failure、report 和 recovery 是不同对象；
+- 注入 fault 不自动等于检测到 error，更不自动等于软件可见 failure；
+- corrected error 仍可更新 CE history 并触发 scrub、threshold 或 retirement policy；
+- uncorrectable error 在成功 containment 时不等于 silent corruption。
 
-### NVMe and SSD
+### 5.2 ECC contract
 
-- guest-visible controller registers, SQ/CQ, doorbells, namespaces and interrupts are separated from FTL/NAND/GC/ECC/wear/power-loss private state；
-- host command completion follows command ordering/durability semantics, not merely internal media scheduling；
-- queue entries are guest-visible memory; controller work entries and media queues are private but checkpointable；
-- functional NVMe controller, queued controller, SSD policy backend and NAND-timed backend are separate fidelity levels。
+ECC 是可替换组件，显式定义：codeword layout、symbol width、check bits、encode/check/correct latency、syndrome、location information，以及 detected/corrected/uncorrectable/miscorrected outcome。
 
-### Hotplug
+代码策略与 DIMM/rank/device/beat/symbol 映射分离。`Chipkill=true` 不是足够的模型配置。
 
-Presence, slot power, link state, configuration visibility, outstanding I/O, error containment and OS/firmware ownership are separate asynchronous states. A device cannot be hot-removed by simply deleting an object.
+### 5.3 Recovery and observability
 
-### CXL
+Retry、corrected writeback、patrol scrub、line/page delete、page retirement、spare substitution、rank/device/core deconfiguration 与 checkpoint rollback 都是独立的定时事件。
 
-- CXL memory retains socket/home-agent topology, transport, device-controller queueing, media and bandwidth saturation；
-- CXL Type-3 memory is not modeled as only “DRAM + constant latency”；
-- placement/interleaving/migration and workload sensitivity are part of validation；
-- the reviewed paper is a performance source for real CXL 1.1 devices, not a normative protocol source。
+原始 fault/syndrome/event stream 保持不可变；CE counter、adaptive threshold 和 retirement table 是可替换 policy state。
 
-## 6. Restricted-source policy
+### 5.4 Fault-injection methodology
 
-One Batch 9 file is visibly marked AMD Confidential / NDA Required. The public repository records only provenance, review status and high-level category. Detailed contents, quotes and vendor-specific procedures are intentionally excluded. Implementation must use public normative PCIe/ACPI/Linux sources.
+每次 campaign 必须保存 fault model、目标总体、空间/时间分布、seed、注入时刻、workload/input、ROI、重复次数、停止/收敛规则、confidence、检测点和 outcome taxonomy。
 
-## 7. Explicit normative gaps
+AVF、DVF、SDC rate、CE/UE incidence、MTTF/MTBF 与 availability 不得混为一个指标。
 
-Before implementation, pin versioned sources for：
+### 5.5 Product-level target
 
-1. PCI Express Base Specification and relevant ECNs/capabilities；
-2. NVM Express Base and selected command-set specifications；
-3. CXL specification for the chosen version/device type；
-4. public PCIe hotplug, AER/DPC, ACPI and Linux behavior。
+长期保持 POWER-inspired 的产品级分层目标：
 
-## 8. Next batch
+```text
+detect → classify → contain → recover → diagnose → isolate/retire → report/service
+```
 
-Batch 10: **RAS / ECC / Chipkill / fault injection / recovery**. There are 18 remaining A canonical groups in this domain. Review will start with coding/ECC foundations, DRAM field-failure evidence, Chipkill/SDDC-style organization, fault injection and recovery/validation.
+但 RAS 实现顺序仍服从当前主线：M0.3 → M0.4 → functional RISC-V/Linux。Batch 10 只建立知识与契约，不提前插入实现。
 
-Accurate state:
+## 6. Initial RAS implementation ladder
 
-> All 623 raw assets are normalized; R=0; 44 source families have L1 review; 20 of 121 A groups are covered and 101 remain. PCIe/NVMe/SSD/CXL boundaries are recorded, and the entire storage-domain A group is covered at L1.
+```text
+RAS-0  Deterministic fault object + one-shot injection + event log
+RAS-1  SECDED component + syndrome + CE/UE outcomes
+RAS-2  Scrub, CE history, thresholds and page/line retirement
+RAS-3  Configurable symbol/device geometry + Chipkill-style policies
+RAS-4  Core/cache/NoC/PCIe fault propagation and containment
+RAS-5  Firmware/OS/service-processor recovery and deconfiguration
+RAS-6  AVF/DVF/MTTF experiments and application-aware policies
+```
+
+## 7. Next batch
+
+Batch 11：**remaining Memory / Cache / DRAM / NVM / CXL**，共 35 个 not-yet-L1 A groups。先做内部 canonical subgroup 划分，再分别处理 cache/controller、DRAM、NVM/CXL 与相关模拟器/性能资料，避免一次把 35 个作品混成一个结论。
+
+Accurate state：
+
+> All 623 raw assets are normalized; R=0; 62 source families have L1 review; 38 of 121 A groups are covered and 83 remain. The RAS/ECC A domain is fully reviewed at L1, with source-backed fault, ECC, injection and recovery boundaries recorded in GitHub.
