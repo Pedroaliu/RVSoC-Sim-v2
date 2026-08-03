@@ -75,6 +75,8 @@ The complete normalized inventory will be committed under `inventory/` in domain
 - Math / Statistics / Queueing / Optimization
 - General / Needs Manual Review
 
+The taxonomy may be corrected after content inspection. For example, Batch 2 moved `ModernSoC_textbook.pdf` from a CPU-primary classification to `SoC Integration / Interconnect / ESL`.
+
 ## 4. Canonical-work rule
 
 One canonical work may map to multiple raw files, for example:
@@ -89,10 +91,67 @@ Raw records are never silently deleted. The canonical record points back to all 
 
 ## 5. Integrity limits
 
-The current duplicate result is title-based. It does not yet prove byte identity. Later duplicate verification should use, where available:
+The original duplicate result is title-based. It does not by itself prove byte identity. Duplicate verification should use, where available:
 
 1. Drive file ID and size;
 2. bibliographic edition/ISBN/year;
 3. table of contents and page count;
 4. content hash after local download;
 5. whether a file is a translation, solution manual, appendix or genuinely separate edition.
+
+The status labels used by the knowledge base are:
+
+- **canonical identity confirmed:** files are known to represent the same work or work family;
+- **translation family:** same work in different languages, not treated as byte duplicates;
+- **probable byte duplicate:** filename and metadata strongly match, but both file hashes have not yet been compared;
+- **byte duplicate confirmed:** complete file hashes match;
+- **related companion:** solution manual, errata or appendix attached to a canonical work but not a duplicate of it.
+
+## 6. Canonical groups confirmed in Batch 2
+
+### CPU-001 — Modern Processor Design
+
+Raw records:
+
+- `K0316` — `现代处理器设计 (舍恩, 利帕斯蒂) (Z-Library).pdf`
+- `K0318` — `Modern Processor Design_ Fundamentals of Superscalar Processors - PDF Room(20220908093341).pdf`
+
+Status: **translation family**. The English text inspected is the Shen/Lipasti work copyrighted 2005 and reissued in 2013.
+
+### ARCH-001 — Computer Architecture: A Quantitative Approach, Sixth Edition
+
+Raw family:
+
+- `K0350` errata;
+- `K0351` solution manual;
+- `K0352` Chinese edition;
+- `K0353` English edition;
+- `K0354`–`K0363` companion Appendices D–M.
+
+Status:
+
+- English and Chinese files are reading editions of the same canonical textbook;
+- solution manual, errata and online appendices are **related companions**, not duplicate textbooks;
+- selected primary bibliographic source is the English sixth edition, ISBN `978-0-12-811905-1`.
+
+### CPU-002 — Processor Microarchitecture: An Implementation Perspective
+
+Raw records:
+
+- `K0382` — `Processor Microarchitecture.pdf`
+- `K0389` — `Processor_Microarchitecture.pdf`
+
+Status: **canonical identity confirmed** as the 2011 González/Latorre/Magklis work. Byte identity remains pending.
+
+### SOC-001 — Modern System-on-Chip Design on Arm
+
+Raw records:
+
+- `K0025` — `ModernSoC_textbook.pdf`
+- `K0345` — `ModernSoC_textbook.pdf`
+
+Drive metadata observed the same filename and size, `16,018,114` bytes, for two copies. Status: **probable byte duplicate**; exact two-file hash comparison remains pending.
+
+The actual bibliographic identity is David J. Greaves, *Modern System-on-Chip Design on Arm*, Arm Education, 2021, ePDF ISBN `978-1-911531-37-1`.
+
+Incremental canonical inventory: `inventory/batch-02-cpu-isa-ooo.csv`.
