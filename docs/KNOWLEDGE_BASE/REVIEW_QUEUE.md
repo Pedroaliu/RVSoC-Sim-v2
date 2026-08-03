@@ -61,20 +61,6 @@ Status: **L1 complete**
 3. The Datacenter as a Computer, Second and Third Editions
 4. Computer Architecture Performance Evaluation Methods
 
-Completed extraction:
-
-- experiment-question and system-boundary formulation;
-- workload selection and representativeness;
-- metric, baseline, averaging and ratio pitfalls;
-- factors, levels, repetitions, seeds and confidence;
-- functional, trace-driven, execution-driven and full-system evaluation scopes;
-- analytical, empirical and hybrid models;
-- Little's Law and queueing bounds as simulator sanity checks;
-- simulator verification, validation and calibration;
-- run metadata and result provenance;
-- warehouse-scale workload, monitoring, tail, power, availability and cost scope;
-- Top-down causal path from service objective to cycle-level events.
-
 Records:
 
 - `reviews/batch-04-performance-datacenter-methodology.md`
@@ -82,33 +68,72 @@ Records:
 - `decisions/performance-evaluation-methodology.md`
 - `inventory/batch-04-performance-methodology.csv`
 
-## Batch 5 — Linux MM / full-system integration
+## Batch 5 — Linux MM / Virtual Memory foundation
 
-Status: **next / queued**
-
-Primary sources:
+Status: **L1 complete**
 
 1. The Linux Memory Manager — Lorenzo Stoakes
 2. Operating Systems: Three Easy Pieces / OSTEP family
 3. Architectural and Operating System Support for Virtual Memory
-4. Linux NUMA and local/remote-memory papers in the inventory
-5. Supporting Linux kernel architecture and virtual-memory references as needed
+4. Local and Remote Memory: Memory in a Linux/NUMA System
+
+Completed extraction:
+
+- VMA validity versus physical-page allocation versus PTE presence;
+- `mm_struct`/VMA Linux implementation role;
+- abstraction, mechanism and policy separation;
+- TLB, page table, page walker, permission and fault boundaries;
+- page tables as guest memory and TLB/walker queues as model state;
+- demand paging, CoW, anonymous/file-backed mappings and fault retry;
+- Linux guest policy versus ArchLab hardware responsibility;
+- Linux-aware decoder boundaries;
+- NUMA execution, memory-home and device-locality separation;
+- functional versus timed translation hierarchy;
+- source gap for the RISC-V-specific boot platform.
+
+Records:
+
+- `reviews/batch-05-linux-mm-virtual-memory.md`
+- `topics/linux.md`
+- `decisions/linux-vm-full-system-boundaries.md`
+- `inventory/batch-05-linux-mm-vm.csv`
+
+## Batch 5B — RISC-V Linux boot contracts
+
+Status: **next / source discovery required**
+
+This batch exists because the Linux/VM sources do not define the exact RISC-V platform contract. Use authoritative, versioned sources wherever possible.
+
+Required source families:
+
+1. RISC-V privileged architecture specification for the selected implementation baseline;
+2. Sv39 PTE, `satp`, ASID, permission, A/D-bit and `SFENCE.VMA` rules;
+3. trap, interrupt, delegation and return behavior;
+4. timer and selected interrupt-controller specification (the project must name the exact platform model);
+5. device-tree specification and relevant RISC-V/platform bindings;
+6. OpenSBI firmware interfaces, domain/platform handoff and console/timer services;
+7. Linux RISC-V boot requirements and expected register/DTB state;
+8. selected UART and minimal MMIO-device specifications;
+9. Spike/NEMU/QEMU reference behavior and differential-test limits.
 
 Expected extraction:
 
-- software-visible physical/virtual-memory behavior required by a functional platform;
-- page-table walk, TLB, permission and fault boundaries;
-- Sv39/MMU responsibilities versus Linux memory-management policy;
-- demand paging, CoW, mmap, page faults and anonymous/file-backed memory;
-- NUMA placement, local/remote access and migration;
-- timer, interrupt, UART, DTB and boot contracts needed before Linux;
-- which Linux behaviors require detailed timing and which require only functional correctness;
-- full-system validation from OpenSBI to BusyBox shell;
-- observation points for VM/process/page/transaction Top-down analysis.
+- exact first-machine memory map;
+- reset PC and boot ROM behavior;
+- privilege transition and CSR contract;
+- precise Sv39 translation and fault outcomes;
+- timer/interrupt event path;
+- DTB contents and boot handoff;
+- minimum UART behavior;
+- OpenSBI-to-Linux sequence;
+- directed and differential validation matrix;
+- authoritative version identifiers stored in the repository.
+
+Batch 5B is complete only when the first Linux-machine design can cite a source for every software-visible platform behavior.
 
 ## Batch 6 — R-class manual triage
 
-Status: **43 raw records queued**
+Status: **43 raw records queued after Batch 5B**
 
 For each R item:
 
@@ -123,7 +148,9 @@ The R batch comes before broad A-class review so an important source is not lost
 
 ## A-class milestone review
 
-Status: **145 raw records queued; canonical count unknown until deduplication**
+Status: **145 raw records in the original coarse pool; remaining canonical count unknown**
+
+Some A-class records have already been absorbed into canonical batches. The complete remaining count will be calculated only after the normalized inventory and duplicate relationships are complete.
 
 Planned groups:
 
